@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Draggable</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+
+		.square {
+			height: 50px;
+			width: 50px;
+			border: 2px solid gray;
+			position: absolute;
+			top: 5px;
+			left: 5px;
+		}
+
+		#space {
+			height: 800px;
+			width: 800px;
+			border: 5px solid green;
+			position: absolute;
+			top: 50px;
+			left: 300px;
+		}
+
+		#location_origin {
+			height: 100px;
+			width: 100px;
+			border: 5px solid red;
+			position: absolute;
+			top: 50px;
+			left: 50px;
+		}
+
+	</style>
+</head>
+<body>
+
+	<div id="location_origin">
+		<div id="square" class="square" draggable="true"></div>
+	</div>
+
+	<div id="space" class="container"></div>
+
+<script type="text/javascript">
+
+	// ondragstart : ocorre quando o usuário começa a arrastar um elemento
+	// ondrag : ocorre quando um elemento está sendo arrastado
+	// ondragend : ocorre quando o usuário termina de arrastar o elemento
+
+	// ondragenter : ocorre quando o elemento arrastado entra no alvo de queda
+	// ondragover : ocorre quando o elemento arrastado está sobre o alvo de queda
+	// ondragleave : ocorre quando o elemento arrastado deixa o destino de soltar
+	// ondrop : ocorre quando o elemento arrastado é solto no destino de soltar
+
+	// incrementa o id dos elementos
+	var id_nodes = 0;
+
+	// inicialização do evento de inicio do drag
+	document.addEventListener("dragstart", fDragStart, false);
+
+	// função do evento de inicio do drag
+	function fDragStart (e) {
+		console.log("dragStart");
+		// aramazena o id do elemento sendo arrastado
+		e.dataTransfer.setData("text", e.target.id);
+	}
+
+	// inicialização do evento de quando está sobre o espaço de drop
+	document.addEventListener("dragover", fDragOver, false);
+	// inicialização do evento de drop
+	document.addEventListener("drop", fDrop);
+
+	// função do evento de quando está sobre o espaço de drop
+	function fDragOver (e) {
+		console.log("DragOver");
+		// evita possiveis problemas de configuraçãoes default de browsers
+		e.preventDefault();
+	}
+
+	// função do evento de drop
+	function fDrop (e) {
+
+		console.log("Drop");
+		e.preventDefault();
+
+		// drop apenas na área de drop
+		if (e.target.className == "container"){
+			
+			// recupera ID no elmento em drop
+			var data = e.dataTransfer.getData("text");
+			// recupera o nó que sera arrastado
+			var node_drag = document.getElementById(data);
+			// recupera o pai do nó que será arrastado
+			var node_drag_parent = node_drag.parentNode;
+
+			// posiciona o elemento na área de drop
+			document.getElementById(data).style.top = (e.clientY - getPosition(e.target).y - 25) + "px";
+			document.getElementById(data).style.left = (e.clientX - getPosition(e.target).x - 25) + "px";
+
+			// verifica se o parent atual do nó é diferente do elemento em que esta sobre
+			// evita criar uma copia qnd se está sobre a area de drop
+			if (node_drag_parent.className != e.target.className){
+				var clone_node = document.createElement("div");
+				clone_node.id = "novo" + id_nodes;
+				id_nodes++;
+				clone_node.className = "square";
+				clone_node.setAttribute("draggable", "true");
+				node_drag_parent.appendChild(clone_node)
+			}
+
+			// modifica o elemento pai para o espaço de drop
+			e.target.appendChild(node_drag);
+
+		}
+
+	}
+
+	function getPosition(el) {
+
+	  // valor do X do elemento na borda superior esquerda
+	  var xPos = 0;
+
+	  // valor do y do elemento na borda superior esquerda
+	  var yPos = 0;
+	 
+	 /* 
+	    el.offsetTop retorna a  medida, em pixels,
+	    da distancia do topo do elemento atual em
+	    relação ao seu elemento pai
+	  */
+
+	  /*
+	    el.offsetLeft retorna a  medida, em pixels,
+	    da distancia do canto superior esquerdo do
+	    elemento atual em relação ao seu elemento pai
+	  */
+
+	  /*
+	    el.offsetParent retorna o elemento pai do
+	    elemento atual
+	  */
+
+	  /*
+	    el.scrollLeft retorna o quão a direita o
+	    elemento está em relação ao seu scroll,
+	    o scroll da direita para a esquerda
+	  */
+
+	  /*
+	    el.scrollTop retorna o quão para baixo o
+	    elemento está em relação ao seu scroll,
+	    o scroll de cima para baixo 
+	  */
+
+	  /*
+	    el.clientLeft retorna a largura da borda
+	    esquerda de um elemento em pixels
+	  */
+
+	  /*
+	    el.clientTop retorna a largura da borda
+	    superior de um elemento
+	  */
+
+	  /*
+	    document.documentElement  retorna o
+	    Elemento que é o elemento raiz do documento
+	    (por exemplo, o elemento <html> para documentos HTML).
+	  */
+
+	  while (el) {
+
+	    if (el.tagName == "BODY") {
+	      
+	      var xScroll = el.scrollLeft || document.documentElement.scrollLeft;
+	      var yScroll = el.scrollTop || document.documentElement.scrollTop;
+	 
+	      xPos += (el.offsetLeft - xScroll + el.clientLeft);
+	      yPos += (el.offsetTop - yScroll + el.clientTop);
+	    } else {
+	      
+	      xPos += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+	      yPos += (el.offsetTop - el.scrollTop + el.clientTop);
+	    }
+
+	    el = el.offsetParent;
+	  }
+	  return {
+	    x: xPos,
+	    y: yPos
+	  };
+	}
+
+</script>
+</body>
+</html>
