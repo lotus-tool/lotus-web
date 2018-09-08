@@ -6,11 +6,11 @@
 </head>
 <body style="background-color: #aaa;">
 
-	<button style="position: absolute; top: 10; left: 10;" onclick="mountScene()">Montar Cenário</button>
+	<button style="position: absolute; top: 10px; left: 10px;" onclick="mountScene()">Montar Cenário</button>
 
-	<button style="position: absolute; top: 10; left: 10; transform: translateX(200px);" onclick="mountLine()">Projetar</button>
+	<button style="position: absolute; top: 10px; left: 10px; transform: translateX(200px);" onclick="mountLine()">Projetar</button>
 
-	<button style="position: absolute; top: 10; left: 10; transform: translateX(400px);" onclick="followLine()">Seguir</button>
+	<button style="position: absolute; top: 10px; left: 10px; transform: translateX(400px);" onclick="followLine()">Seguir</button>
 
 	<button id="case1" style="position: absolute; transform: translate(700px,100px);" onclick="cases(this)">Caso 1</button>
 	<button id="case2" style="position: absolute; transform: translate(800px,100px);" onclick="cases(this)">Caso 2</button>
@@ -30,6 +30,8 @@
 		<g id="arrow" fill="black" transform="rotate(0)">
 			<path d="M 0,0 V 20 L 30,10 z"/>
 		</g>
+
+        <path id="line" d="M100,300 Q183,424 133,564" stroke="black" stroke-width="5" fill="transparent"></path>
 
 		<text x="20" y="105"> 100 </text>
 		<text x="20" y="205"> 200 </text>

@@ -4,7 +4,7 @@
 	<title>Arrastar e Soltar</title>
 	<meta charset="utf-8">
 	<style type="text/css">
-		#div-grad {
+		#paint_panel {
 			width: 750px;
 			height: 500px;
 			border-style: solid;
@@ -15,10 +15,10 @@
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
         crossorigin="anonymous">
-	<script type="text/javascript" src="interact.js"></script>
+	<script type="text/javascript" src="scripts/interact.js"></script>
 
 </head>
-<body id="body" style="background-color: black;">
+<body id="body" style="">
 
 	<div class="container mt-5">
 		
@@ -28,9 +28,9 @@
 
 				<div class="row justify-content-center"><p id="kkk" style="color: white;">Aperte e Solte na área de borda branca!!!</p></div>
 				
-				<div onclick="printar()" id="quad" class="row justify-content-center">
+				<div id="quad" class="row justify-content-center">
 					
-					<i class="far fa-square text-danger" style="font-size: 30px"></i>
+					<img src="images/ic_state.png" onclick="printar()">
 
 				</div>
 
@@ -40,7 +40,7 @@
 				
 				<div class="row">
 					
-					<div class="col-8" id="div-grad" style="color: white;"></div>
+					<div class="col-8" id="paint_panel" style="color: black;"></div>
 
 				</div>
 
@@ -50,7 +50,7 @@
 
 	</div>
 
-	<script type="text/javascript" src="main.js"></script>
+	<script type="text/javascript" src="scripts/stateActions.js "></script>
 
 </body>
 </html>

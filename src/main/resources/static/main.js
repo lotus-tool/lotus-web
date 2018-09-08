@@ -2,7 +2,7 @@
 interact('.draggable')
   .draggable({
     // enable inertial throwing
-    inertia: true,
+    inertia: false,
     // keep the element within the area of it's parent
     restrict: {
       restriction: "parent",

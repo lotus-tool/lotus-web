@@ -13,17 +13,22 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
         crossorigin="anonymous">
     <style>
-<<<<<<< Updated upstream
-        html,
-        body {
+        html,body {
             width: 100%;
             height: 100%;
         }
+        #paint_panel {
+            width: 100%;
+            height: 95%;
+            margin-top: 2%;
+            border-style: solid;
+            border-width: 1px;
+            background-color: white;
+        }
 
-        #navbar>nav>div>ul>li>a.nav-link {
-=======
-        .nav-master>nav>div>ul>li>a.nav-link{
->>>>>>> Stashed changes
+        #navbar>nav>div>ul>li>a.nav-link { }
+
+        .nav-master > nav > div > ul > li > a.nav-link {
             padding: 0rem .2rem 0rem .5rem;
         }
 
@@ -31,7 +36,7 @@
             border-radius: 24px;
         }
     </style>
-<<<<<<< Updated upstream
+
 </head>
 
 <body>
@@ -111,95 +116,19 @@
         </div>
     </nav>
     <div class="container">
-        <div class="action-panel">
-=======
-  </head>
-  <body>
+        <div class="action-panel"></div>
+    </div>
+  <div>
     <div class="container-fluid px-0">
-        <div class="row"> <!-- Header -->
-            <div class="col-3">
-                <img src="images/app_logo.png" class="img-fluid" alt="image logo">
-            </div>
-            <div class="col-3 mt-1">
-                <div class="row mt-2"> <!-- Project Name -->
-                    <input type="text" name="tile" class="form-control form-control-sm col-12" placeholder="Untitle Diagram" style="border-width: 0">
-                </div>
-                <div class="row nav-master"><!-- Function Menu ( Micro Services) -->
-                    <nav class="navbar navbar-expand-lg px-0 pt-0">
-                        <div class="collapse navbar-collapse">
-                            <ul class="navbar-nav">
-                                <li class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toogle" data-toggle="dropdown">File</a>
-                                    <div class="dropdown-menu">
-                                        <a href="" class="dropdown-item">1</a>
-                                        <a href="" class="dropdown-item">2</a>
-                                        <a href="" class="dropdown-item">3</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toogle" data-toggle="dropdown">MSC</a>
-                                    <div class="dropdown-menu">
-                                        <a href="" class="dropdown-item">1</a>
-                                        <a href="" class="dropdown-item">2</a>
-                                        <a href="" class="dropdown-item">3</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toogle" data-toggle="dropdown">Verification</a>
-                                    <div class="dropdown-menu">
-                                        <a href="" class="dropdown-item">1</a>
-                                        <a href="" class="dropdown-item">2</a>
-                                        <a href="" class="dropdown-item">3</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toogle" data-toggle="dropdown">TCG</a>
-                                    <div class="dropdown-menu">
-                                        <a href="" class="dropdown-item">1</a>
-                                        <a href="" class="dropdown-item">2</a>
-                                        <a href="" class="dropdown-item">3</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toogle" data-toggle="dropdown">Trace</a>
-                                    <div class="dropdown-menu">
-                                        <a href="" class="dropdown-item">1</a>
-                                        <a href="" class="dropdown-item">2</a>
-                                        <a href="" class="dropdown-item">3</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toogle" data-toggle="dropdown">Help</a>
-                                    <div class="dropdown-menu">
-                                        <a href="" class="dropdown-item">1</a>
-                                        <a href="" class="dropdown-item">2</a>
-                                        <a href="" class="dropdown-item">3</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toogle" data-toggle="dropdown">Model</a>
-                                    <div class="dropdown-menu">
-                                        <a href="" class="dropdown-item">1</a>
-                                        <a href="" class="dropdown-item">2</a>
-                                        <a href="" class="dropdown-item">3</a>
-                                    </div>
-                                </li>
-                                
-                            </ul>
-                        </div>
-                    </nav>
-                </div>
-            </div>
-        </div>
+
         <div class="action-panel"> <!-- Model Tools ( Mudar para o Left Panel ) -->
->>>>>>> Stashed changes
             <nav class="nav justify-content-center">
                 <a href="" class="nav-link">
                     <img src="images/ic_arrow.png" alt="select">
                 </a>
-                <a href="" class="nav-link">
+                <button class="nav-link" onclick="printar();">
                     <img src="images/ic_big_state.png" alt="state">
-                </a>
+                </button>
                 <a href="" class="nav-link">
                     <img src="images/ic_transition_line.png" alt="line transition">
                 </a>
@@ -223,25 +152,20 @@
                 </a>
             </nav>
         </div>
-<<<<<<< Updated upstream
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3" style="background-color: cyan">Left Panel</div>
-                <div class="col-md-6" style="background-color: darkblue">Center Panel</div>
-=======
+
         <div class="container-fluid">
-            <div class="row"> <!-- Panels -->
+            <div class="row" style="height: 500px;" > <!-- Panels -->
                 <div class="col-md-2" style="background-color: cyan">Left Panel</div>
-                <div class="col-md-7" style="background-color: darkblue">Center Panel</div>
->>>>>>> Stashed changes
+                <div class="col-md-7" style="background-color: darkblue">
+                    <div class="col-12" id="paint_panel" style="color: black;"></div>
+
+                </div>
                 <div class="col-md 3" style="background-color: darkcyan">Right Panel</div>
             </div>
             <div class="row"> <!-- Footer -->
                 <div class="bottom-panel">bottom-panel</div>
             </div>
         </div>
-    </div>
-    </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -250,6 +174,11 @@
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
         crossorigin="anonymous"></script>
-</body>
 
+    <!-- Scripts -->
+    <script src="scripts/interact.js" type="text/javascript"></script>
+    <script src="scripts/stateActions.js" type="text/javascript"></script>
+</div>
+  </div>
+</body>
 </html>
