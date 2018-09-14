@@ -1,4 +1,4 @@
-var id = 0;
+var state_id = 0;
 
 
 // target elements with the "draggable" class
@@ -28,22 +28,56 @@ interact('.draggable')
                     .toFixed(2) + 'px');
         }
       */
+    }).on('tap',function (e) {
+    console.log("tap");
+        if(mouse_Status == transition_Mode) {
+            console.log("TARGET: " + e.currentTarget);
+            var x = parseInt(e.currentTarget.getAttribute('x')) + 12;
+            var y = parseInt(e.currentTarget.getAttribute('y')) + 12;
+            var ID = e.currentTarget.getAttribute('data-state-id');
+            console.log('X: ' + x + " Y: " + y);
+            draw_transition(x, y, ID);
+        }else if(mouse_Status == inTransition){
+            console.log("remove");
+            var x = parseInt(e.currentTarget.getAttribute('x')) + 12;
+            var y = parseInt(e.currentTarget.getAttribute('y')) + 12;
+            var ID = e.currentTarget.getAttribute('data-state-id');
+            document.getElementsByTagName("body")[0].removeEventListener("mousemove", follow);
+            onStopFollow(x,y, ID);
+        }
     });
 
 function dragMoveListener (event) {
-    var target = event.target,
-        // keep the dragged position in the data-x/data-y attributes
-        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+    if(mouse_Status == select_Mode || mouse_Status == state_Mode) {
+        var target = event.target,
+            // keep the dragged position in the data-x/data-y attributes
+            x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+            y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-    // translate the element
-    target.style.webkitTransform =
-        target.style.transform =
-            'translate(' + x + 'px, ' + y + 'px)';
+        // translate the element
+        target.style.webkitTransform =
+            target.style.transform =
+                'translate(' + x + 'px, ' + y + 'px)';
+        // Transitions follow on move State
 
-    // update the posiion attributes
-    target.setAttribute('data-x', x);
-    target.setAttribute('data-y', y);
+        var x_original = parseInt(target.getAttribute('x'));
+        var y_original = parseInt(target.getAttribute('y'));
+        var stateID = target.getAttribute('data-state-id');
+        var paths = document.getElementsByTagNameNS("http://www.w3.org/2000/svg", 'path');
+        for (var i=0,n= paths.length; i<n; i++){
+            var srcID =  paths[i].getAttribute('data-srcID');
+            var dstID =  paths[i].getAttribute('data-dstID');
+            if( srcID == stateID){
+                onCharge(paths[i], x_original + (x) + 12, y_original + (y) + 12, 0);
+            }else if(dstID == stateID){
+                onCharge(paths[i], x, y, 1);
+            }
+        }
+        // update the posiion attributes
+        target.setAttribute('data-x', x);
+        target.setAttribute('data-y', y);
+
+    }
 }
 
 // this is used later in the resizing and gesture demos
@@ -51,7 +85,7 @@ function dragMoveListener (event) {
 
 function printar () {
     // https://stackoverflow.com/questions/8809909/change-cursor-to-finger-pointer
-    document.getElementsByTagName("body")[0].style.cursor = "url('images/ic_state.png'),auto";
+    mouse_Status = state_Mode;
 }
 
 //var clickButton = document.querySelector("#div-grad");
@@ -60,100 +94,31 @@ function printar () {
 document.getElementById("paint_panel").addEventListener('click', new_state, false);
 
 function new_state (e) {
-    if (document.getElementsByTagName("body")[0].style.cursor == "url(\"images/ic_state.png\"), auto") {
-        document.getElementsByTagName("body")[0].style.cursor = 'default';
+    if (mouse_Status == state_Mode) {
+//        document.getElementsByTagName("body")[0].style.cursor = 'default';
 
         var div_espaco = document.getElementById("paint_panel");
-        var novo_elemento = document.createElement("img");
+        var novo_elemento = document.createElementNS("http://www.w3.org/2000/svg", "image");
 
 
+        novo_elemento.className = "state draggable resize-drag";
+        novo_elemento.setAttribute("class","state draggable resize-drag");
+        novo_elemento.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', "images/ic_state.png");
+        y = e.offsetY;
+        x = e.offsetX
+        if(x < 0) x = 0;
+        if(y < 0) y = 0;
+        novo_elemento.style.cursor = 'grab';
+        novo_elemento.setAttribute('x', x);
+        novo_elemento.setAttribute('y', y);
+        novo_elemento.setAttribute('height',24);
+        novo_elemento.setAttribute('width',24);
+
+        novo_elemento.setAttribute('data-state-id',''+ state_id++);
+        novo_elemento.setAttribute('data-x', 0);
+        novo_elemento.setAttribute('data-y', 0);
         div_espaco.appendChild(novo_elemento);
-        novo_elemento.style.position = "absolute";
-        novo_elemento.className = "draggable resize-drag";
-        novo_elemento.setAttribute('src',"images/ic_state.png");
-        //novo_elemento.style.fontSize = "30px";
-
-        novo_elemento.style.top = (e.clientY - getPosition(div_espaco).y - (novo_elemento.clientHeight / 2) ) + "px";
-        novo_elemento.style.left = (e.clientX - getPosition(div_espaco).x - (novo_elemento.clientWidth / 2) ) + "px";
-        novo_elemento.style.cursor = 'all-scroll';
-
-        novo_elemento.setAttribute('data-state-id',''+ id++);
     }
 
 }
 
-function getPosition(el) {
-
-    // valor do X do elemento na borda superior esquerda
-    var xPos = 0;
-
-    // valor do y do elemento na borda superior esquerda
-    var yPos = 0;
-
-    /*
-       el.offsetTop retorna a  medida, em pixels,
-       da distancia do topo do elemento atual em
-       relação ao seu elemento pai
-     */
-
-    /*
-      el.offsetLeft retorna a  medida, em pixels,
-      da distancia do canto superior esquerdo do
-      elemento atual em relação ao seu elemento pai
-    */
-
-    /*
-      el.offsetParent retorna o elemento pai do
-      elemento atual
-    */
-
-    /*
-      el.scrollLeft retorna o quão a direita o
-      elemento está em relação ao seu scroll,
-      o scroll da direita para a esquerda
-    */
-
-    /*
-      el.scrollTop retorna o quão para baixo o
-      elemento está em relação ao seu scroll,
-      o scroll de cima para baixo
-    */
-
-    /*
-      el.clientLeft retorna a largura da borda
-      esquerda de um elemento em pixels
-    */
-
-    /*
-      el.clientTop retorna a largura da borda
-      superior de um elemento
-    */
-
-    /*
-      document.documentElement  retorna o
-      Elemento que é o elemento raiz do documento
-      (por exemplo, o elemento <html> para documentos HTML).
-    */
-
-    while (el) {
-
-        if (el.tagName == "BODY") {
-
-            var xScroll = el.scrollLeft || document.documentElement.scrollLeft;
-            var yScroll = el.scrollTop || document.documentElement.scrollTop;
-
-            xPos += (el.offsetLeft - xScroll + el.clientLeft);
-            yPos += (el.offsetTop - yScroll + el.clientTop);
-        } else {
-
-            xPos += (el.offsetLeft - el.scrollLeft + el.clientLeft);
-            yPos += (el.offsetTop - el.scrollTop + el.clientTop);
-        }
-
-        el = el.offsetParent;
-    }
-    return {
-        x: xPos,
-        y: yPos
-    };
-}
