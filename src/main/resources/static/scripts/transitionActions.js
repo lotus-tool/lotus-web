@@ -71,62 +71,41 @@ function draw_transition(x1, y1, srcID){
 var follow;
 function followLine (x1,y1) {
      follow = function (e) {
-        /*
-                    var coord = calcPolarCoord(x1, y1, e.clientX, e.clientY);
-
-                    var x = coord.x;
-                    var y = coord.y;
-                    var x_Marker = coord.x_Marker;
-                    var y_Marker = coord.y_Marker;
-                    var teta = coord.teta;
-        */
         mouse_Status = inTransition;
         var line = document.getElementById("data-line-id-"+ transition_id);
-        //console.log(line);
         var d = line.getAttribute("d");
-        // console.log(d);
-
-        //Usando Pitagoras;
-        var xPoint = (e.offsetX + x1) / 2;
-        var deltaY = (e.offsetY + y1) / 2;
-        // Com isso temos o ponto médio, (xPoint, deltaY).
-
 
          // offset para o mouse não ficar em cima da linha;
          var offsetX = -1;
          var offsetY = -1;
 
-        if (e.offsetX > x1) {
+        if (e.offsetX > x1) { // Mouse a Direita do ponto de src
             var diferençax = (e.offsetX - x1);
-            var altura = deltaY - ( (diferençax * Math.sqrt(3)) / 4 );
-            offsetX = -2;
-        }else{
+            offsetX = -5;
+        }else{ // Mouse a esquerda
             var diferençax =(x1 - e.offsetX );
-            var altura = deltaY + ( (diferençax * Math.sqrt(3)) /4 );
-            offsetX = +2;
+            offsetX = +5;
         }
-        console.log("yPoint: "+altura);
-        if(e.offsetY > y1){
+        if(e.offsetY > y1){ // Mouse em cima do ponto de src
             var diferençay = e.offsetY-y1;
-            offsetY = -2;
-        }else{
+            offsetY = -5;
+        }else{ // Mouse em baixo do ponto de src
             var diferençay = y1 - e.offsetY;
-            offsetY = +2;
+            offsetY = +5;
         }
 
-        var yPoint = 0;
-
+         var qpoints = setQPoint(x1,y1,e.offsetX,e.offsetY);
         // Somar o angulo formado, entre a altura e a reta de (x1,y1) e (x2,y2), com alfa algulo de elevação entre os pontos 1 e 2.
          var hipotenusa = Math.sqrt( Math.pow(diferençax,2) + Math.pow(diferençay,2) );
          var angulo_de_elevação = Math.asin(diferençay/hipotenusa);
+         /*
          var xPoint = xPoint * Math.cos(angulo_de_elevação);
          var yPoint = altura * Math.sin(angulo_de_elevação);
-
+        */
          // VERIFICAR A POSIÇÃO DOS PONTOS PARA ATUALIZAR O OFFSET
-
          // yPoint is 25% of the height.
-        d = d.slice(0,d.lastIndexOf("Q")+1) + xPoint + "," + yPoint + " " + (e.offsetX + (offsetX) ) + "," + (e.offsetY+ (offsetY));
-        //console.log(d);
+
+        d = d.slice(0,d.lastIndexOf("Q")+1) + qpoints.xPoint + "," + qpoints.yPoint + " " + (e.offsetX + (offsetX) ) + "," + (e.offsetY+ (offsetY));
         line.setAttribute("d", d);
 
 
@@ -152,34 +131,42 @@ function onStopFollow(x2, y2, ID){
 function onCharge(path, x_charged, y_charged, flag) {
     var d = path.getAttribute('d');
     d = d.split(" ");
-
-    if(flag == 0){
+    // d[0] = M
+    // d[1] = Qpoints
+    // d[2] = x,y of destiny
+    if(flag == 0){ // Move Source
         var q = d[2].slice(0,d[1].length).split(",");
-        console.log(q);
-        var qpoints = setQPoint(x_charged, y_charged, parseFloat(q[0]), parseFloat(q[1]) );
+        var qpoints = setQPoint(x_charged, y_charged, parseFloat(q[0]), parseFloat(q[1]));
         var newd = "M"+ x_charged +","+ y_charged +" Q"+qpoints.xPoint+","+qpoints.yPoint+" "+d[2];
         path.setAttribute('d',newd);
-    }else{
-        console.log("USAR PITAGORAS PARA DEFINIR Q DA MESMA FORMA QUE O FOLLOWLINE EM AMBOS OS CASOS");
+    }else{ // Move Destiny
+        var q = d[0].slice(1,d[0].length).split(",");
+        var qpoints = setQPoint(parseFloat(q[0]), parseFloat(q[1]), x_charged, y_charged);
+        var newd = d[0] +" Q"+qpoints.xPoint+","+qpoints.yPoint+" "+x_charged +","+ y_charged ;
+        path.setAttribute('d',newd);
     }
 
 
 }
 
 function setQPoint(x1,y1, x2, y2){
-    console.log('x1: '+x1);
-    console.log('x2: '+x2);
-    console.log('y1: '+y1);
-    console.log('y2: '+y2);
-    var xPoint = (x2 + x1) / 2;
-    var deltaY = (y2 + y1) / 2;
+    var vectorv = [x2-x1, y2-y1];
+    var vectoru = [-(vectorv[1]), vectorv[0]];
+    var vectoru_v = unitary(vectoru);
+    var l = module(vectorv[0], vectorv[1]);
+    var h = (l/2)* Math.sqrt(3);
 
-    if (x2 > x1) {
-        var yPoint = deltaY - ( ((x2 - x1) * Math.sqrt(3)) / 4 );
-    }else{
-        var yPoint = deltaY + ( ((x1 - x2 ) * Math.sqrt(3)) /4 );
-    }
+    var midpoint = [(x1 +x2)/2 , (y1+y2)/2];
+    var p3 = [vectoru_v[0]* (-h) + midpoint[0], vectoru_v[1]* (-h) + midpoint[1]];
 
-    return {'xPoint':xPoint, 'yPoint':yPoint}
+    return {'xPoint':p3[0], 'yPoint':p3[1]};
 
+}
+
+function unitary(vector){
+    var m = module(vector[0], vector[1]);
+    return [vector[0]/m, vector[1]/m];
+}
+function module(a,b) {
+    return Math.sqrt(a*a + b*b);
 }

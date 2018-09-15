@@ -32,15 +32,15 @@ interact('.draggable')
     console.log("tap");
         if(mouse_Status == transition_Mode) {
             console.log("TARGET: " + e.currentTarget);
-            var x = parseInt(e.currentTarget.getAttribute('x')) + 12;
-            var y = parseInt(e.currentTarget.getAttribute('y')) + 12;
+            var x = parseInt(e.currentTarget.getAttribute('x')) + parseInt(e.currentTarget.getAttribute('data-x')) + 12;
+            var y = parseInt(e.currentTarget.getAttribute('y')) + parseInt(e.currentTarget.getAttribute('data-y')) + 12;
             var ID = e.currentTarget.getAttribute('data-state-id');
             console.log('X: ' + x + " Y: " + y);
             draw_transition(x, y, ID);
         }else if(mouse_Status == inTransition){
             console.log("remove");
-            var x = parseInt(e.currentTarget.getAttribute('x')) + 12;
-            var y = parseInt(e.currentTarget.getAttribute('y')) + 12;
+            var x = parseInt(e.currentTarget.getAttribute('x')) + parseInt(e.currentTarget.getAttribute('data-x')) + 12;
+            var y = parseInt(e.currentTarget.getAttribute('y')) + parseInt(e.currentTarget.getAttribute('data-y ')) + 12;
             var ID = e.currentTarget.getAttribute('data-state-id');
             document.getElementsByTagName("body")[0].removeEventListener("mousemove", follow);
             onStopFollow(x,y, ID);
@@ -70,7 +70,7 @@ function dragMoveListener (event) {
             if( srcID == stateID){
                 onCharge(paths[i], x_original + (x) + 12, y_original + (y) + 12, 0);
             }else if(dstID == stateID){
-                onCharge(paths[i], x, y, 1);
+                onCharge(paths[i], x_original + (x) + 12, y_original + (y) + 12, 1);
             }
         }
         // update the posiion attributes
