@@ -40,7 +40,7 @@ interact('.draggable')
         }else if(mouse_Status == inTransition){
             console.log("remove");
             var x = parseInt(e.currentTarget.getAttribute('x')) + parseInt(e.currentTarget.getAttribute('data-x')) + 12;
-            var y = parseInt(e.currentTarget.getAttribute('y')) + parseInt(e.currentTarget.getAttribute('data-y ')) + 12;
+            var y = parseInt(e.currentTarget.getAttribute('y')) + parseInt(e.currentTarget.getAttribute('data-y')) + 12;
             var ID = e.currentTarget.getAttribute('data-state-id');
             document.getElementsByTagName("body")[0].removeEventListener("mousemove", follow);
             onStopFollow(x,y, ID);
