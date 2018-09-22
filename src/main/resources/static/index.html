@@ -148,6 +148,9 @@
                 <a href="" class="nav-link">
                     <img src="images/ic_big_state_dismount.png" alt="big state dismount">
                 </a>
+                <button class="nav-link btn btn-link" onclick="parser()">
+                    <img src="images/ic_transition_line.png" alt="line transition">
+                </button>
             </nav>
         </div>
 
@@ -155,9 +158,6 @@
             <div class="row" style="height: 500px;" > <!-- Panels -->
                 <div class="col-md-2" style="background-color: cyan">Left Panel</div>
                 <div class="col-md-7" style="background-color: darkblue">
-                    <g id="arrow" fill="black" transform="rotate(0)">
-                        <path d="M 0,0 V 20 L 30,10 z"/>
-                    </g>
                     <div id="paint_div" class="col-12"  style="color: black;">
                         <svg id="paint_panel" height="100%" width="100%"
                              xmlns="http://www.w3.org/2000/svg"
@@ -186,6 +186,7 @@
     <script src="scripts/interact.js" type="text/javascript"></script>
     <script src="scripts/transitionActions.js" type="text/javascript"></script>
         <script src="scripts/stateActions.js" type="text/javascript"></script>
+        <script src="scripts/parser.js" type="text/javascript"></script>
 </div>
   </div>
 </body>

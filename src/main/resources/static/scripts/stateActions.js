@@ -31,7 +31,6 @@ interact('.draggable')
     }).on('tap',function (e) {
     console.log("tap");
         if(mouse_Status == transition_Mode) {
-            console.log("TARGET: " + e.currentTarget);
             var x = parseInt(e.currentTarget.getAttribute('x')) + parseInt(e.currentTarget.getAttribute('data-x')) + 12;
             var y = parseInt(e.currentTarget.getAttribute('y')) + parseInt(e.currentTarget.getAttribute('data-y')) + 12;
             var ID = e.currentTarget.getAttribute('data-state-id');
@@ -44,6 +43,7 @@ interact('.draggable')
             var ID = e.currentTarget.getAttribute('data-state-id');
             document.getElementsByTagName("body")[0].removeEventListener("mousemove", follow);
             onStopFollow(x,y, ID);
+            repaint();
         }
     });
 
@@ -105,7 +105,7 @@ function new_state (e) {
         novo_elemento.setAttribute("class","state draggable resize-drag");
         novo_elemento.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', "images/ic_state.png");
         y = e.offsetY;
-        x = e.offsetX
+        x = e.offsetX;
         if(x < 0) x = 0;
         if(y < 0) y = 0;
         novo_elemento.style.cursor = 'grab';
@@ -115,10 +115,25 @@ function new_state (e) {
         novo_elemento.setAttribute('width',24);
 
         novo_elemento.setAttribute('data-state-id',''+ state_id++);
+        novo_elemento.setAttribute('data-state-type','initial');
         novo_elemento.setAttribute('data-x', 0);
         novo_elemento.setAttribute('data-y', 0);
         div_espaco.appendChild(novo_elemento);
     }
 
+}
+
+function repaint(){
+    // Função usada para repintar os estados sempre q tiver transição, para o estado sobrepor a transição.
+        var elementos = document.getElementsByTagName('svg')[0].children;
+        var tam = elementos.length;
+        for(var i=0; i < tam  ; tam--) {
+            var element = elementos[i];
+            if (element.tagName == "image") {
+                var new_element = element.cloneNode();
+                element.remove();
+                document.getElementById("paint_panel").appendChild(new_element);
+            }
+        }
 }
 

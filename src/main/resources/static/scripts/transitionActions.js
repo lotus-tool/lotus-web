@@ -2,46 +2,7 @@ var transition_id = -1;
 function draw_transition(x1, y1, srcID){
     console.log("Entrou")
     if(mouse_Status == transition_Mode) {
-   /*     var coord = calcPolarCoord(x1, y1, x1, y1);
-    console.log("Entrou2");
-        var x = coord.x;
-        var y = coord.y;
-        var Xm = coord.Xm;
-        var Ym = coord.Ym;
-        var x_Marker = coord.x_Marker;
-        var y_Marker = coord.y_Marker;
-        var teta = coord.teta;
 
-        console.log('x: ' + x1);
-        console.log('y: ' + y1);
-
-        var svg = document.getElementsByTagName("svg")[0];
-        var line = document.createElementNS(
-            'http://www.w3.org/2000/svg', 'line');
-        svg.appendChild(line);
-        line.setAttribute("x1", Xm);
-        line.setAttribute("y1", Ym);
-        line.setAttribute("x2", x);
-        line.setAttribute("y2", y);
-        line.setAttribute("stroke", "black");
-        line.setAttribute("stroke-width", "5");
-
-        var dot1 = document.createElementNS(
-            'http://www.w3.org/2000/svg', 'circle');
-        svg.appendChild(dot1);
-        dot1.setAttribute("cx", Xm);
-        dot1.setAttribute("cy", Ym);
-        dot1.setAttribute("r", 15);
-        dot1.setAttribute("fill", "blue");
-
-        var dot2 = document.createElementNS(
-            'http://www.w3.org/2000/svg', 'circle');
-        svg.appendChild(dot2);
-        dot2.setAttribute("cx", x);
-        dot2.setAttribute("cy", y);
-        dot2.setAttribute("r", 15);
-        dot2.setAttribute("fill", "blue");
-*/
         var svg = document.getElementsByTagName("svg")[0];
         var pat = document.createElementNS(
             'http://www.w3.org/2000/svg', 'path');
@@ -52,7 +13,7 @@ function draw_transition(x1, y1, srcID){
 
         pat.setAttribute("d", d);
         pat.setAttribute("stroke", "black");
-        pat.setAttribute("stroke-width", "5");
+        pat.setAttribute("stroke-width", "2");
         pat.setAttribute("fill", "transparent");
         pat.setAttribute("data-srcID", ""+srcID);
 /*
@@ -95,26 +56,16 @@ function followLine (x1,y1) {
         }
 
          var qpoints = setQPoint(x1,y1,e.offsetX,e.offsetY);
-        // Somar o angulo formado, entre a altura e a reta de (x1,y1) e (x2,y2), com alfa algulo de elevação entre os pontos 1 e 2.
-         var hipotenusa = Math.sqrt( Math.pow(diferençax,2) + Math.pow(diferençay,2) );
-         var angulo_de_elevação = Math.asin(diferençay/hipotenusa);
-         /*
-         var xPoint = xPoint * Math.cos(angulo_de_elevação);
-         var yPoint = altura * Math.sin(angulo_de_elevação);
-        */
-         // VERIFICAR A POSIÇÃO DOS PONTOS PARA ATUALIZAR O OFFSET
-         // yPoint is 25% of the height.
 
-        d = d.slice(0,d.lastIndexOf("Q")+1) + qpoints.xPoint + "," + qpoints.yPoint + " " + (e.offsetX + (offsetX) ) + "," + (e.offsetY+ (offsetY));
-        line.setAttribute("d", d);
+         var hipotenusa = module((x1-e.offsetX), (y1-e.offsetY));
+         var angulo_de_elevação = ( Math.asin((y1-e.offsetY)/hipotenusa) ) * 180 / Math.PI; // transforma em graus
 
 
-        /*
-                    var ang = calcAngMarker(teta, x1, e.clientX, y1, e.clientY);
+         d = d.slice(0,d.lastIndexOf("Q")+1) + qpoints.xPoint + "," + qpoints.yPoint + " " + (e.offsetX + (offsetX) ) + "," + (e.offsetY+ (offsetY));
+         line.setAttribute("d", d);
 
-                    var marker = document.getElementById("marker");
-                    marker.setAttribute("transform", "translate(" + x_Marker + " " + y_Marker +") rotate (" + ang + ")");
-        */
+         var arrow;
+
     };
     document.getElementsByTagName("body")[0].addEventListener("mousemove", follow,false);
 }
@@ -154,7 +105,7 @@ function setQPoint(x1,y1, x2, y2){
     var vectoru = [-(vectorv[1]), vectorv[0]];
     var vectoru_v = unitary(vectoru);
     var l = module(vectorv[0], vectorv[1]);
-    var h = (l/2)* Math.sqrt(3);
+    var h = ( (l/2)* Math.sqrt(3) ) /3;
 
     var midpoint = [(x1 +x2)/2 , (y1+y2)/2];
     var p3 = [vectoru_v[0]* (-h) + midpoint[0], vectoru_v[1]* (-h) + midpoint[1]];
