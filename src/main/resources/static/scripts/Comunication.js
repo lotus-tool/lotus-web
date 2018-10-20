@@ -34,11 +34,11 @@ function MountJsonInfo () {
 
 		json.transitions[key]['id'] = key;
 
-		// Quando adicionar estados Origem
-		json.transitions[key]['orgState'] = undefined;
+		json.transitions[key]['orgState'] = 
+			info_manager.transitions_elements[key].orgState;
 
-		// Quando adicionar estados Destino
-		json.transitions[key]['dstState'] = undefined;
+		json.transitions[key]['dstState'] = 
+			info_manager.transitions_elements[key].dstState;
 
 		json.transitions[key]['label'] = 
 			info_manager.transitions_elements[key].info_transition['label'];

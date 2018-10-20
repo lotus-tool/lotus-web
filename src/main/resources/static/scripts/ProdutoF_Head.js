@@ -73,6 +73,10 @@ var TransitionElement = function( element ){
 
   this.el = element;
 
+  this.orgState = undefined;
+
+  this.dstState = undefined;
+
   this.info_transition = { "label" : "Label", "probability" : 1.0, "guard" : true };
 
 }

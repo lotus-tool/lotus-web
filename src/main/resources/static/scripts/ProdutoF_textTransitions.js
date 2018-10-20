@@ -1,4 +1,4 @@
-function addTextTransition (id_conexao) {
+function addTextTransition (id_conexao, state_element) {
 
 	var probability = document.getElementById("probability").checked;
 	var guard = document.getElementById("guard").checked;
@@ -7,6 +7,8 @@ function addTextTransition (id_conexao) {
 		new TransitionElement( document.getElementById(id_conexao) );
 
 	info_manager.transitions_elements[id_conexao].label = undefined;
+	info_manager.transitions_elements[id_conexao].orgState = 
+		state_element.parentElement.id;
 	
 	var g_text_marker = document.getElementsByClassName("text_marker")[0].cloneNode(true);
 	g_text_marker.setAttribute("transform", "translate(0 -10)");

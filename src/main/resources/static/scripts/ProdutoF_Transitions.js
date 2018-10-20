@@ -68,6 +68,9 @@ var eventTransitions = function (e, obj_state_element) {
 
     if ( e.target.parentElement == info_manager.initial_state ){ return false; }
 
+    info_manager.transitions_elements[info_manager.transitionInMove].dstState = 
+      element.parentElement.id;
+
     var info_element = element.getBoundingClientRect();
 
     obj_state_element.setInPutTransitions(info_manager.transitionInMove);
@@ -255,7 +258,7 @@ var eventTransitions = function (e, obj_state_element) {
     marker.setAttribute("draggable", "true");
     info_manager.svg.insertBefore(marker, document.getElementById("startLines"));
 
-    addTextTransition(id_conexao);
+    addTextTransition(id_conexao, element);
 
     info_manager.svg.addEventListener("mousemove", followLine, false);
     path.addEventListener("click", eventLineDrop, false);
