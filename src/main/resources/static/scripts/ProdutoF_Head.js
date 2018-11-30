@@ -29,6 +29,12 @@ var StateElement = function ( element ) {
     this.removeValOutputTransitions -> Remove o Id da transição especificada 
     do array de transições de saída
 
+    this.includeOutPutTransition -> Retorna se o id passado como parâmetro
+    pertence a alguma transição de saída do estado.
+
+    this.includeInPutTransition -> Retorna se o id passado como parâmetro
+    pertence a alguma transição de entrada do estado.
+
   */
   
   this.el = element;
@@ -71,6 +77,18 @@ var StateElement = function ( element ) {
 
 var TransitionElement = function( element ){
 
+  /*
+    this.el -> elemento HTML <path> da transição.
+
+    this.orgState -> ID do estado de origem.
+
+    this.dstState -> ID do estado de destino.
+
+    this.info_transition -> Objeto com as informações sobre a label, 
+    probabilidade e guarda do objeto.
+  
+  */
+
   this.el = element;
 
   this.orgState = undefined;
@@ -85,52 +103,98 @@ var Info_Manager = function(svg_id) {
 
   /*
 
-    element_copy -> elemento HTML sendo copiado 
-    para o espaço de construção do diagrama 
+    this.element_copy -> armazena o elemento HTML sendo copiado 
+    para o espaço de construção do diagrama.
 
-    element_moved -> elemento HTML sendo arrastado 
-    no espaço de construção do diagrama 
+    this.element_moved -> armazena o elemento HTML sendo arrastado 
+    no espaço de construção do diagrama.
 
-    n_new_element -> Id dos elemento HTML que 
-    representão os estados que estão sendo criados 
+    this.n_new_element -> variavel que incrementa a cada novo 
+    estado criado, usada para gerar os seus Ids.
 
-    svg -> svg dos espaço de criação dos 
-    diagramas 
+    this.proxLabel -> define o nome do proximo estado a ser
+    criado.
 
-    n_transition -> numero do id da proxima 
-    transição
+    this.dropDownMenuEl -> armazena o elemento HTML <g> do
+    estado que está com o DropDownMenu aberto.
 
-    transitionInMove -> id da transição que 
-    esta em movimento
+    this.svg -> armazena o elemento HTML do svg do espaço de 
+    contrução do diagrama.
 
-    state_elements -> dicionário(objeto) que 
-    armazena os Elementos(Estados)
+    this.n_transition -> numero do id da proxima transição.
+
+    this.transitionInMove -> id da transição que esta em movimento.
+
+    this.state_elements -> dicionário(objeto) que armazena os 
+    Elementos(Estados).
+
+    this.transitions_elements -> objeto que armazena as 
+    informações de cada transição.
+
+    this.el_marker_text -> armazena o elemento HTML <tspan>
+    que está sendo alterado, sabendo que pode ser o valor
+    da probabilidade, guarda ou label de uma transição.
+
+    this.create_initial_state -> informa se um estado inicial 
+    está sendo criado. (Deve ser removido)
+
+    this.create_final_state -> informa se um estado final 
+    está sendo criado. (Deve ser removido)
+
+    this.initial_state -> armazena o elemento HTML <g> do estado 
+    definido como o estado inicial.
+
+    this.final_states -> objeto que armazena os elementos HTML <g> 
+    do estados definidos como finais.
+
+    this.timeAnimDropDown -> define o tempo em milissegundos de 
+    cada iteração da animação do DropDownMenu.
+
+    this.ModeAnimation -> define se está ou não no modo de 
+    simulação.
+
+    this.stopAnimSimulation -> define se deve ser interrompida a 
+    animação do botão de Inicio/Fim da Simulação.
+
+    this.currentStateSimulation -> armazena o elemento HTML <g> 
+    do estado ultimo estado selecionado na simulação.
+
+    this.traceSimulation -> armazena um array de arrays, em que 
+    cada array possui O estado antigo e o estado atualmente usados 
+    na simulação, assim como a transição entre eles.
 
   */
 
   this.element_copy = undefined;
   this.element_moved = undefined;
-  this.element_remove = false;
   this.n_new_element = 0;
+  this.proxLabel = 0;
+
+  this.dropDownMenuEl = undefined;
 
   this.svg = document.getElementById(svg_id);
 
-  // NLinhas
   this.n_transition = 0;
-  // lineInMove
   this.transitionInMove = undefined;
-  // circles
   this.state_elements = {};
 
-  // info das transições
   this.transitions_elements = {};
 
   this.el_marker_text = undefined;
 
+  /* (Deve ser removido) */
   this.create_initial_state = false;
+  /* (Deve ser removido) */
   this.create_final_state = false;
   this.initial_state = undefined;
   this.final_states = {};
+
+  this.timeAnimDropDown = 500;
+
+  this.ModeAnimation = false;
+  this.stopAnimSimulation = false;
+  this.currentStateSimulation = undefined;
+  this.traceSimulation = [];
 
 }
 

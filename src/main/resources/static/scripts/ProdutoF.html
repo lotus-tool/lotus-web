@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Drag and Drop SVG</title>
+	<meta charset="utf-8">
+
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+	<script type="text/javascript" src="ProdutoF_Head.js"></script>
+
+	<!-- <link rel="shortcut icon" href="figures/faviconLotusWebV2.ico" > -->
+	<link rel="shortcut icon" href="figures/FaviconLW.png" >
+
+</head>
+<body style="background-color: #aaa;">
+
+	<!-- Adicionar class="copy_el" para elementos copiaveis -->
+	<!-- Adicionar onmousedown="copy_Start(event)" também -->
+
+	<div>
+		
+		<div id="elements">
+
+			<svg width="0px" height="0px">
+
+				<defs>
+					<g id="arrow" fill="transparent" transform="rotate(0)">
+						<g class="marker_class" transform="translate(0 0) rotate(0)">
+							<path d="M0,0 V16 L12,8 z" onmousedown="f_marker_follow(this)"/>
+							<circle cx="6" cy="25" r="4" fill="transparent" onclick="showTextMarker(event)" onmouseenter="mouseEnterMarker(event)" onmouseleave="mouseLeaveMarker(event)" style="pointer-events: auto;"/>
+						</g>
+
+					</g>
+
+					<g class="text_marker" font-size="10px" text-anchor="middle" font-family="Arial">
+						<text y="0">
+							
+							<tspan class="probability_marker_display">( </tspan>
+							<tspan class="probability_marker probability_marker_display" onclick="changeText(event)"></tspan>
+							<tspan class="probability_marker_display"> )</tspan>
+							
+							<tspan class="guard_marker_display">[ </tspan>
+							<tspan class="guard_marker guard_marker_display" onclick="changeText(event)"></tspan>
+							<tspan class="guard_marker_display"> ]</tspan>
+
+							<tspan class="label_marker label_marker_display" onclick="changeText(event)">Label</tspan>
+
+						</text>
+					</g>
+
+					<foreignObject class="text_editable_input" style="width: 100px;" x="-50">
+						<div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: center; justify-content:center;">
+							<input type="text"></input>
+						</div>
+					</foreignObject>
+
+					<foreignObject class="dropdown_menu" x="100" y="100">
+						<div>
+							<ul>
+								<li><a onclick="dragMoveEl()">Drag/Transition</a></li>
+								<li><a onclick="isInitialState()">Initial State</a></li>
+								<li><a onclick="isFinalState()">Final State</a></li>
+								<li><a onclick="remove_Element()">Remove</a></li>	
+							</ul>
+						</div>
+					</foreignObject>
+
+				</defs>
+
+			</svg>
+		
+			<svg width="60px" height="60px">
+
+				<path class="copy_el" fill="transparent" stroke="purple" stroke-width="5px" stroke-dasharray="10" d="M0,0 h50 v50 h-50 v-50" onmousedown="copy_Start(event)" transform="translate(5 5)" />
+
+			</svg>
+
+			<svg width="60px" height="60px">
+			
+				<circle class="copy_el" cx="25" cy="25" r="25" fill="blue" onmousedown="copy_Start(event)" transform="translate(5 5)" stroke="black" stroke-width="2px" />
+
+			</svg>
+
+			<svg width="80px" height="60px">
+			
+				<ellipse class="copy_el" cx="35" cy="25" rx="35" ry="25" fill="#777" onmousedown="copy_Start(event)" transform="translate(2 5)" stroke="black" stroke-width="2px" />
+				
+			</svg>
+
+		</div>
+
+		<p id="textModeAnimation">Simulation Mode</p>
+
+		<div id="container">
+						
+			<svg id="container_svg" width="500px" height="500px">
+				
+				<g id="startLines"></g>
+
+			</svg>
+
+		</div>
+
+		<div id="extra_funcs">
+			
+			<i class="fas fa-mouse-pointer mouse_default" onclick="defaultMouse(event)"></i>
+
+			<button id="animStarter" onclick="ModeAnimation()">
+				<i class="fas fa-play"></i>
+				Simulation Starter
+			</button>
+
+		</div>
+
+	</div>
+
+	<div style="position: absolute; top: 550px; left: 30px;">
+		
+		<input id="probability" type="checkbox" onchange="alterTextMarkers()" />
+		<label for="probability">Probability</label>
+
+		<input id="guard" type="checkbox" onchange="alterTextMarkers()"/>
+		<label for="guard">Guard</label>
+
+	</div>
+
+	<script type="text/javascript" src="ProdutoF.js"></script>
+	<script type="text/javascript" src="ProdutoF_Transitions.js"></script>
+	<script type="text/javascript" src="ProdutoF_textTransitions.js"></script>
+	<script type="text/javascript" src="Comunication.js"></script>
+	<script type="text/javascript" src="DropDownMenu.js"></script>
+	<script type="text/javascript" src="ElementsCreat.js"></script>
+	<script type="text/javascript" src="AnimationStarter.js"></script>
+	<script type="text/javascript" src="UpdateStates.js"></script>
+
+</body>
+</html>

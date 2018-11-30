@@ -1,6 +1,3 @@
-// D/T -> DRAG/TRANSITION
-
-
 /* objeto contendo informações sobre os elementos HTML 
 	sendo animados */
 var info_manager = new Info_Manager("container_svg");
@@ -12,11 +9,11 @@ function copy_Start (ev) {
 
 	/*
 
-		info_manager.element_copy -> Elemento 
-		HTML sendo copiado  
+		info_manager.element_copy -> armazena o elemento HTML <circle,path,...> 
+		que representa o tipo do novo estado.
 
-		info_manager.svg.style.cursor -> Altera 
-		o cursor para o formato de uma cruz 
+		info_manager.svg.style.cursor -> Altera o cursor para o formato de uma 
+		cruz 
 
 	*/
 
@@ -30,51 +27,73 @@ function copy_End(ev) {
 
 	/*
 
-		element -> elemento HTML que realizou a 
-		chamada do evento 
+		element -> elemento HTML qualquer do documento html.
 
-		Verifica se o elemento que chamou o evento 
-		é o espaço de construção do diagrama 
+		Verifica-se se "element" representa o elemento HTML <svg> do espaço de 
+		trabalho.
 
-		Verifica se há algum elemento sendo copiado 
+		Verifica se há algum elemento sendo copiado e se o modo de simulação 
+		não esta ativado.
 
-		g_new_element -> cria um elemento HTML SVG 
-		de tag <g> para agupar o elemento estado, 
-		seu label e seu ponto D/T
+		g_new_element -> elemento HTML <g> que acopla o estado, seu label e seu 
+		ponto de acesso ao menu DropDown.
 
-		new_element -> Novo elemento HTML criado 
-		como uma copia de um outro elemento 
-		( modelo de estado ) 
+		new_element -> elemento HTML <circle, path, ...> que representa o novo 
+		estado sendo criado.
 
-		text_new_element -> cria um elemento HTML SVG 
-		de tag <text> para ser o Label do estado 
+		text_new_element -> elemento HTML <text> que representa o label do novo 
+		estado.
 
-		options_circle -> cria um elemento HTML SVG 
-		de tag <circle> para ser o ponto D/T
+		options_circle -> elemento HTML <circle> que serve de ponto de acesso 
+		ao menu DropDown.
 
-		options_circle recebe um evento de click para 
-		alterar as configuraçãoes de drag para transition 
-		e vice-versa 
+		Evento "click" de "options_circle" -> Acessa o menu DropDown.
 
-		g_new_element recebe um evento para quando o mouse 
-		sai e uma para quando ele entra no elemento, para 
-		ver visivel ou não o ponto D/T 
+		Evento "mouseenter" de "g_new_element" -> faz com que o ponto de acesso 
+		do menu DropDown fique visivel.
 
-		new_element tem seu evento "mousedown" removido 
-		para que não entre em conflito com o seu novo 
-		evento "mousedown" para drag e transition 
+		Evento "mouseleave" de "g_new_element" -> faz com que o ponto de acesso 
+		do menu DropDown fique transparent.
 
-		new_element recebe o evento de DRAG
+		Remoção do Atributo "onmousedown" de "new_element" -> não haver 
+		conflito com seu evento de click.
 
-		g_new_element recebe o elemento estado, o seu 
-		label e seu ponto D/T, e depois é adicionado 
-		ao SVG 
+		info_manager.n_new_element é incrementado.
 
-		Um novo objeto estado elemento (StateElement) é 
-		criado para acoplar o elemento estado criado 
+		info_manager.proxLabel é incrementado.
 
-		 new_element recebe o evento de criação de 
-		 transição 
+		O cursor volta para o formato padrão.
+
+		"new_element", "text_new_element" e "options_circle" são adicionados a 
+		"g_new_element".
+
+		"g_new_element" é adicionado a "element".
+
+		Um objeto StateElement é criado para o novo estado.
+
+		Verifica-se se o estado copiado possui permissão para ter eventos 
+		acionados pelo mouse:
+
+			Caso em que o novo elemento está sendo criado com uma transição, 
+			sendo proveniente de um elemento já criado.
+
+			O estado criado de um estado já existente não possui permissão para 
+			acessar eventos de mouse inicialmente.
+
+			info_manager.element_copy é limpo, recebendo "undefined".
+
+			Remoção do atributi "ID" de "new_element" -> garantir unicidade 
+			entre estado, além de que <g> possui o ID do estado.
+
+			"new_element" recebe permissão de acesso a eventos de click.
+
+			A transição recebe permissão de acesso a eventos de click.
+
+			CreateTransition é chamado diretamente para forçar a ligação da 
+			transição do estado original com o novo estado criado a partir dele.
+
+		Evento "mousedown" de "new_element" -> acessa a função que define a 
+		ação do click sobre o estado.
 
 	*/
 
@@ -82,7 +101,9 @@ function copy_End(ev) {
 
 	if ( element.id == info_manager.svg.id ){
 
-		if ( info_manager.element_copy != undefined ){
+		if ( info_manager.element_copy != undefined && info_manager.ModeAnimation != true ){
+
+			console.log("=================================");
 
 			var g_new_element = document.createElementNS("http://www.w3.org/2000/svg", "g");
 			var new_element = info_manager.element_copy.cloneNode(false);
@@ -103,7 +124,7 @@ function copy_End(ev) {
 			options_circle.setAttribute("r", "5");
 			options_circle.setAttribute("fill", "transparent");
 			options_circle.setAttribute("class", "circle_text");
-			options_circle.addEventListener("click", change_type_click, false);
+			options_circle.addEventListener("click", DropDowMenu, false);
 
 			g_new_element.id = info_manager.n_new_element;
 			g_new_element.setAttribute("class", "copy_el");
@@ -117,7 +138,9 @@ function copy_End(ev) {
 
 			info_manager.n_new_element++;
 
-			text_new_element.textContent = "State " + g_new_element.id;
+			text_new_element.textContent = info_manager.proxLabel;
+
+			info_manager.proxLabel++;
 
 			g_new_element.style.cursor = "default";
 
@@ -128,6 +151,19 @@ function copy_End(ev) {
 
 			info_manager.state_elements[g_new_element.id] = 
 				new StateElement( new_element );
+
+			if (new_element.style.pointerEvents == "none"){
+
+				console.log("Novo Estado");
+
+				info_manager.element_copy = undefined;
+				new_element.removeAttribute("id");
+				new_element.style.pointerEvents = "auto";
+				releasePointerEventTransition();
+
+				CreateTransition(ev, info_manager.state_elements[g_new_element.id]);
+
+			}
 
 			new_element.addEventListener("mousedown", function(e) { 
 				clickEventEl(e, info_manager.state_elements[g_new_element.id]); }, false);
@@ -141,50 +177,35 @@ function copy_End(ev) {
 function clickEventEl (ev, obj_state_element) {
 	
 	/*
-		1 - Remove Element
+		Verifica se está em modo de Simulação:
 
-		2 - Transitions Events
+			Executação a ação deste modo.
 
-		3 - Drag Start
-
-		4 - Init State
+		Verifica se deve criar uma nova transição ou se deve inicia a ação de 
+		arrasto (DRAG).
 
 	*/
 
-	if ( info_manager.element_remove ){
+	if ( info_manager.ModeAnimation == true ){
 
-		console.log(" Remove Element ");
-	
-		remove_Element(ev);
-	
+		console.log("Simulação");
+
+		Simulation(ev, obj_state_element);
+
 	}else if ( ( obj_state_element.drag_transition == 0 ) && 
 				( info_manager.create_initial_state == false ) && 
 				( info_manager.create_final_state == false ) ){
 
 		console.log(" Transitions Events ");
 
-		eventTransitions(ev, obj_state_element);
+		CreateTransition(ev, obj_state_element);
 
-	}else if ( ( obj_state_element.drag_transition == 1 ) && 
-      ( info_manager.create_initial_state == false ) && 
-      ( info_manager.create_final_state == false ) ){
+	}else if ( obj_state_element.drag_transition == 1 ){
 
       	console.log(" Drag Start ");
 
 		dragStart(ev);
 
-	}else if( info_manager.create_initial_state ){
-
-		console.log(" Init State ");
-
-		isInitialState(ev);
-
-	}else if ( info_manager.create_final_state ) {
-
-		console.log(" Final State ")
-
-		isFinalState(ev);
-		
 	}
 
 }
@@ -193,27 +214,15 @@ function dragStart (ev) {
 
 	/*
 
-		element -> elemento HTML <g> que acopla o 
-		elemento estado que irá ser arrastado
+		element -> elemento HTML <g> que acopla o estado que irá ser arrastado.
 
-		info_manager.element_moved é alterado para 
-		o elemento <g> que contem o elemento estado 
-		sendo arrastado 
+		info_manager.element_moved recebe "element".
 
-		Se no objeto StateElement referente ao elemento 
-		sendo arrastado estiver informando que ele está 
-		no modo de transição (valor 0), então ele não 
-		continua com o evento, senão ele mantém o evento 
-		de arrasto 
+		Evento "mousemove" de <svg> do espaço de trabalho: Realiza o arrasto.
 
-		Eventos de movimento do mouse, saída do espaço 
-		do elemento e liberação do botão do mouse são 
-		adicionados ao espaço de construção do diagrama 
+		Evento "mouseleave" de <svg> do espaço de trabalho: Encerra o arrasto.
 
-		Eventos para o arrasto e seu fim são adicionados 
-		ao elemento SVG, sendo esses eventos sempres 
-		relacionados apenas ao elemento estado que iniciou 
-		o DRAG 
+		Evento "mouseup" de <svg> do espaço de trabalho: Encerra o arrasto.
 
 	*/
 
@@ -231,22 +240,27 @@ function drag (ev) {
 
 	/*
 
-		preventDefault -> cancela o evento se for cancelável, 
-		sem parar a propagação do mesmo 
+		preventDefault -> cancela o evento se for cancelável, sem parar a 
+		propagação do mesmo 
 
-		Altera as coordenadas do elemento para as do mouse 
-		enquanto o botão estiver sendo segurado 
+		Os novos x e y são calculados.
 
-		followElement é responsavel por fazer com que as 
-		transições ligadas aquele determinado elemento 
-		sigam-no 
+		state -> recebe do <g> do estado, o próprio estado <circle,path,...>, 
+		usando da class "copy_el" que identifica os estados.
+
+		O estado é movido para suas novas coordenadas.
+
+		As transições do estado tem seus valores recalculados para porder 
+		segui-lo.
 
 	*/
 
 	ev.preventDefault();
 
-	var x = ev.clientX - getPosition(info_manager.svg).x - (info_manager.element_moved.getBoundingClientRect().width / 2);
-	var y = ev.clientY - getPosition(info_manager.svg).y - (info_manager.element_moved.getBoundingClientRect().height / 2);
+	/* Verificar se são necessários */
+	
+	/*var x = ev.clientX - getPosition(info_manager.svg).x - (info_manager.element_moved.getBoundingClientRect().width / 2);
+	var y = ev.clientY - getPosition(info_manager.svg).y - (info_manager.element_moved.getBoundingClientRect().height / 2);*/
 
 	var state = info_manager.element_moved.querySelector(".copy_el");
 
@@ -263,18 +277,26 @@ function dragEnd (ev) {
 
 	/*
 
-		preventDefault -> cancela o evento se for cancelável, 
-		sem parar a propagação do mesmo
+		preventDefault -> cancela o evento se for cancelável, sem parar a 
+		propagação do mesmo
 
-		Altera as coordenadas do elemento para as do mouse 
+		Os novos x e y são calculados.
 
-		followElement é responsavel por fazer com que as 
-		transições ligadas aquele determinado elemento 
-		sigam-no 
+		state -> recebe do <g> do estado, o próprio estado <circle,path,...>, 
+		usando da class "copy_el" que identifica os estados.
 
-		info_manager.element_moved é limpo 
+		O estado é movido para suas novas coordenadas.
 
-		Eventos de arrasto e seu fim são removidos 
+		As transições do estado tem seus valores recalculados para porder 
+		segui-lo.
+
+		info_manager.element_moved é limpo, recebendo undefined.
+
+		Evento "mousemove" de <svg> do espaço de trabalho: Removido.
+
+		Evento "mouseleave" de <svg> do espaço de trabalho: Removido.
+
+		Evento "mouseup" de <svg> do espaço de trabalho: Removido.
 
 	*/
 
@@ -297,35 +319,6 @@ function dragEnd (ev) {
 
 }
 
-function change_type_click (ev) {
-
-	/*
-
-		Se "drag_transition" do elemento principal estiver 
-		marcado como Drag, ele ficará como Transition 
-		e vice-versa 
-
-		Como método informativo, a variavel drag_transition do 
-		elemento principal é modificada, para então ser testada 
-		durante os clicks, além de que o texto do elemento é 
-		modificado 
-
-	*/
-
-	// elemento pai do circulo de drag_transition ( elemento "g" )
-	var element = ev.target.parentElement;
-
-	if (info_manager.state_elements[element.id].drag_transition === 0){
-		info_manager.state_elements[element.id].drag_transition = 1;
-		element.querySelector(".text_circle").textContent = 
-			element.querySelector(".text_circle").textContent.replace("State","Drag");
-	}else{
-		info_manager.state_elements[element.id].drag_transition = 0;
-		element.querySelector(".text_circle").textContent = 
-			element.querySelector(".text_circle").textContent.replace("Drag","State");
-	}
-}
-
 function mouseEnterState (ev) {
 	ev.target.querySelector(".circle_text").setAttribute("fill", "white");
 	ev.target.querySelector(".text_circle").setAttribute("fill", "transparent");
@@ -344,175 +337,7 @@ function mouseLeaveMarker (ev) {
 	ev.target.setAttribute("fill", "transparent");
 }
 
-function remove_Element_Bool(ev){
-
-	info_manager.element_remove = true;
-
-}
-
-function remove_Element (ev) {
-	
-	var element_id = ev.target.parentNode.id;
-
-	var outPutTransitions = 
-		info_manager.state_elements[element_id].getOutPutTransitions();
-
-	var inPutTransitions = 
-		info_manager.state_elements[element_id].getInPutTransitions();
-
-	while ( outPutTransitions.length > 0 ){
-		remove_Transition(outPutTransitions[0]);
-	}
-
-	while ( inPutTransitions.length > 0 ){
-		remove_Transition(inPutTransitions[0]);
-	}
-
-	info_manager.svg.removeChild(ev.target.parentNode);
-
-	info_manager.element_remove = false;
-
-}
-
-function new_Initial_State (ev) {
-	
-	if ( info_manager.create_initial_state ){
-		info_manager.create_initial_state = false;
-	}else{
-		info_manager.create_initial_state = true;
-	}
-
-}
-
-function new_Final_State (ev) {
-	
-	if ( info_manager.create_final_state ){
-		info_manager.create_final_state = false;
-	}else{
-		info_manager.create_final_state = true;
-	}
-
-}
-
-function isInitialState (ev) {
-
-	var state = ev.target;
-	var g_parent = ev.target.parentElement;
-
-	// já existe um estado inicial
-	if ( ( info_manager.initial_state != undefined ) || 
-		( info_manager.state_elements[g_parent.id].getInPutTransitions().length > 0 ) ){
-
-		info_manager.create_initial_state = false;
-		return false;
-	
-	}
-
-	var transform = null;
-	var x_transform = 0;
-	var y_transform = 0;
-	var transform = undefined;
-	var index_x_transform = 0;
-	var index_y_transform = 0;
-	var transform_after_x = "";
-
-	if ( info_manager.final_states[g_parent.id] == undefined ){
-
-		// console.log("não estado final");
-
-		var y = getPosition(g_parent).y - getPosition(state).y + ( state.getBoundingClientRect().height/2 );
-
-	}else{
-
-		// console.log("estado final");
-
-		var y = getPosition(g_parent).y - getPosition(g_parent.querySelector(".el_final_state")).y + ( g_parent.querySelector(".el_final_state").getBoundingClientRect().height/2 );
-
-	}
-
-	var indicator = document.createElementNS("http://www.w3.org/2000/svg", "path");
-	indicator.setAttribute("d", "M0,0 v20 L15,10 z");
-	indicator.setAttribute("fill", "transparent");
-	indicator.setAttribute("stroke", "#666");
-	indicator.setAttribute("stroke-width", "2px");
-	indicator.setAttribute("transform", "translate(0 " + y + ")");
-
-	for( var i = 0; i < g_parent.children.length; i++ ){
-
-		transform = g_parent.children[i].getAttribute("transform");
-
-		if( transform != null ){
-
-			transform = g_parent.children[i].getAttribute("transform");
-
-			index_x_transform = transform.indexOf("translate") + "translate".length + 1;
-			index_y_transform = transform.indexOf("translate") + "translate".length + 3;
-			transform_after_x = transform.slice( index_x_transform );
-
-			transform = transform.slice(0, index_x_transform) + 
-						( Number(transform.slice(index_x_transform, transform.indexOf(" "))) + 15 ) + 
-						transform_after_x.slice( transform_after_x.indexOf(" ") );
-
-			g_parent.children[i].setAttribute(
-				"transform", transform );
-
-		}else{
-			g_parent.children[i].setAttribute("transform", "translate(15 0)");
-		}
-
-	}
-
-	g_parent.insertBefore(indicator, g_parent.childNodes[0]);
-	
-	transform = g_parent.getAttribute("transform");
-	index_x_transform = transform.indexOf("translate") + "translate".length + 1;
-	transform_after_x = transform.slice( index_x_transform );
-
-	transform = transform.slice(0, index_x_transform) + 
-		( Number(transform.slice(index_x_transform, transform.indexOf(" "))) - 15 ) + 
-		transform_after_x.slice( transform_after_x.indexOf(" ") );
-
-	g_parent.setAttribute("transform", transform);
-
-	info_manager.create_initial_state = false;
-	info_manager.initial_state = g_parent;
-
-}
-
-function isFinalState (ev) {
-
-	var state = ev.target;
-	var g_parent = ev.target.parentElement;
-	var copy_state = state.cloneNode(true);
-	var info_state = state.getBoundingClientRect();
-
-	var x = ( getPosition(state).x - getPosition(g_parent).x ) + ( ( info_state.width * 0.1 ) / 2 );
-	var y = ( getPosition(state).y - getPosition(g_parent).y ) + ( ( info_state.height * 0.1 ) / 2 );
-
-	// para identificar o elemento atras do estado quando ele é o final 
-	copy_state.setAttribute("class", "el_final_state");
-	state.setAttribute("transform", "translate("+ x +" "+ y +") scale(0.9)");
-
-	if ( info_manager.initial_state == g_parent ){
-
-		g_parent.insertBefore(copy_state, g_parent.childNodes[1]);
-		info_manager.create_final_state = false;
-		info_manager.final_states[g_parent.id] = g_parent;
-
-	}else{
-
-		g_parent.insertBefore(copy_state, g_parent.childNodes[0]);
-		info_manager.create_final_state = false;
-		info_manager.final_states[g_parent.id] = g_parent;
-
-	}
-
-}
-
-function defaultMouse (ev) {
-	
+function defaultMouse (ev) {	
 	info_manager.element_copy = undefined;
-
 	info_manager.svg.style.cursor = 'default';
-
 }
