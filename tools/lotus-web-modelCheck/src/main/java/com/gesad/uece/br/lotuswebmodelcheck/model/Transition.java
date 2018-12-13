@@ -3,6 +3,8 @@ package com.gesad.uece.br.lotuswebmodelcheck.model;
 public class Transition {
 
     private String action;
+
+
     private State srcState;
     private State dstState;
 
@@ -65,10 +67,10 @@ public class Transition {
     public String toString() {
 
         String retorno =
-                "Action: "+action+
-                " SRC: "+srcState.getLabel()+
-                " DST: "+dstState.getLabel()+
-                " Probaility: "+probability+
+                " Action: "+action+
+//                " SRC: "+srcState.getLabel()+
+//                " DST: "+dstState.getLabel()+
+                " Probability: "+probability+
                 " Guard: "+guard+
                 " Visitedcount: "+visitedTransitionsCount;
         return retorno;

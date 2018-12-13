@@ -1,7 +1,6 @@
 package com.gesad.uece.br.lotuswebtraceToModel;
 
 
-import com.gesad.uece.br.lotuswebtraceToModel.model.Component;
 import com.gesad.uece.br.lotuswebtraceToModel.model.State;
 import com.gesad.uece.br.lotuswebtraceToModel.model.Transition;
 import com.google.gson.Gson;
@@ -39,7 +38,6 @@ public class TraceToModel {
     private final Map<String, State> mStates = new HashMap<>();
     private ArrayList<Transition> transitions = new ArrayList<>();
     State mCurrentState;
-    private Component mComponent;
     private String namesDestinysState;
     private boolean haveInitial = false;
 
@@ -47,7 +45,6 @@ public class TraceToModel {
 
     @PostMapping(value = "/")
     protected String parseFile(InputStream input) throws IOException {
-        mComponent = new Component();
         if (input != null) {
             State StateInicial = getOrCreateState("0");
             try {

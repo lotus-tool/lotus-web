@@ -1,5 +1,6 @@
 package com.gesad.uece.br.lotuswebmodelcheck.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
@@ -9,12 +10,11 @@ public class State {
     private int id;
     private String label;
 
+
     private transient List<Transition> transicoesSaindo = new ArrayList<>();
 
     private transient List<Transition>  transicoesChengado = new ArrayList<>();
 
-    private double coordX;
-    private double coordY;
 
     private boolean isInitial;
     private boolean isFinal;
@@ -46,56 +46,47 @@ public class State {
         this.transicoesChengado = transicoesChengado;
     }
 
-    public double getCoordX() {
-        return coordX;
-    }
 
-    public void setCoordX(double coordX) {
-        this.coordX = coordX;
-    }
-
-    public double getCoordY() {
-        return coordY;
-    }
-
-    public void setCoordY(double coordY) {
-        this.coordY = coordY;
-    }
-
-    public boolean isInitial() {
+    public boolean getIsInitial() {
         return isInitial;
     }
 
-    public void setInitial(boolean initial) {
-        if(isError || isFinal){
+    public void setIsInitial(boolean initial) {
+        if(initial == true){
+            isInitial = true;
             isError = false;
             isFinal = false;
+        }else{
+            isInitial = false;
         }
-        isInitial = initial;
     }
 
-    public boolean isFinal() {
+    public boolean getIsFinal() {
         return isFinal;
     }
 
-    public void setFinal(boolean aFinal) {
-        if(isError || isInitial){
+    public void setIsFinal(boolean aFinal) {
+        if(aFinal == true){
+            isFinal = true;
             isError = false;
+            isInitial = false;
+        }else{
             isFinal = false;
         }
-        isFinal = aFinal;
     }
 
-    public boolean isError() {
+    public boolean getIsError() {
         return isError;
     }
 
-    public void setError(boolean error) {
-        if(isFinal || isInitial){
+    public void setIsError(boolean error) {
+        if(error == true){
+            isError = true;
             isFinal = false;
             isInitial = false;
+        }else{
+            isError = false;
         }
-        isError = error;
     }
 
     public int getVisitedStatesCount() {
@@ -125,11 +116,11 @@ public class State {
     @Override
     public String toString() {
         String retorno =
-                "id: "+this.id+"" +
+                " id: "+this.id+"" +
                 " Label: "+this.label+"" +
-                " coordX: "+this.coordX+"" +
-                " coordY: "+this.coordY+"" +
                 " isInitial: "+this.isInitial+"" +
+                " isFinal: "+this.isFinal+""+
+                " isErro: "+this.isError+""+
                 " visitedStatesCount: "+this.visitedStatesCount+"";
         for(Transition t : transicoesChengado){
             retorno += t.toString();

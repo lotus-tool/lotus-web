@@ -3,56 +3,85 @@ package com.gesad.uece.br.lotuswebmodelcheck;
 import com.gesad.uece.br.lotuswebmodelcheck.model.State;
 import com.gesad.uece.br.lotuswebmodelcheck.model.Transition;
 import com.google.gson.Gson;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
 
-@RequestMapping(value = "/modelckeck")
+@RequestMapping(value = "/modelcheck")
+@CrossOrigin
 @RestController
 public class ModelCheck {
 
     @PostMapping(value = "/")
-    public String check(InputStream inputStream, boolean probabilistic) throws IOException {
+    public @ResponseBody String check(
+            @RequestBody State[] inputStream,
+            @RequestParam(value = "prob") boolean probabilistic
+    ) throws IOException {
         Gson gson = new Gson();
-        State[] stateList = gson.fromJson(inputStream.toString(), State[].class);
-
+        State[] stateList = inputStream;
         String erros = "";
         for(State state : stateList){
+            //System.out.println("ESTADO: "+state);
             // DeadLock
-            if(state.getTransicoesSaindo().size() == 0 && !state.isFinal()){
+            if(state.getTransicoesSaindo().size() == 0 && !state.getIsFinal()){
                 erros += "Deadlock in state: " + state.getLabel()+"\n";
             }
             // Unreachable
-            if(state.getTransicoesChengado().size() == 0 && !state.isInitial()){
+            System.out.println("AQUI");
+            state.getTransicoesChengado().forEach(x->{
+                System.out.println(x);
+            });
+            if(state.getTransicoesChengado().size() == 0 && !state.getIsInitial()){
                 erros += "State "+state.getLabel() + " is a Unreachable state.\n";
             }
 
-            // Probabilitic
+
             if(probabilistic) {
                 double sum = 0.0;
                 for (Transition transition : state.getTransicoesSaindo()) {
+                    //System.out.println("TRANSIÇÃO: "+transition);
                     if (transition.getProbability() == 0.0) { // Mesmo que nulo
+                        System.out.println("AQUI");
                         erros += "State "+state.getLabel()+" have a transition without probability\n";
                         break;
                     }
                     sum += transition.getProbability();
                 }
-                if(sum != 1){
+                if(sum != 1 && state.getTransicoesSaindo().size()>0){
                     erros += "State "+state.getLabel()+" is inconsistent, sum probabilities != 1\n";
                 }
             }
+
         }
 
 
 
 
-
-        return (erros == ""? erros : "Your model that is ok!" );
+        String s = "Your model that is ok!";
+        return (erros.equals("")? gson.toJson(s) : gson.toJson(erros));
 
     }
 
 
+}
+
+class json{
+    State[] state;
+    Transition[] transition;
+
+    public State[] getState() {
+        return state;
+    }
+
+    public void setState(State[] state) {
+        this.state = state;
+    }
+
+    public Transition[] getTransition() {
+        return transition;
+    }
+
+    public void setTransition(Transition[] transition) {
+        this.transition = transition;
+    }
 }
