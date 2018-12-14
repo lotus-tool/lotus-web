@@ -1,0 +1,8 @@
+version: '2.1'
+
+services:
+  lotus-web:
+    image: lotus-web
+    build: .
+    ports:
+      - 80:80
