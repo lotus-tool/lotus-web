@@ -2,7 +2,7 @@ version: '2.1'
 
 services:
   lotus-web:
-    image: lotus-web
+    image: lotustool/lotus-web
     build:
       context: .
       dockerfile: Dockerfile

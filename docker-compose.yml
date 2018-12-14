@@ -2,14 +2,14 @@ version: '2.1'
 
 services:
   lotus-web:
-    image: lotus-web
+    image: lotustool/lotus-web
     build: .
     ports:
       - 80:80
     depends_on: 
      - lotus-web-modelcheck
   lotus-web-modelcheck:
-    image: lotus-web-modelcheck
+    image: lotustool/lotus-web-model-check
     build: ./tools/lotus-web-modelCheck
     ports: 
       - 8080:8080
