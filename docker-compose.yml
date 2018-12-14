@@ -6,3 +6,11 @@ services:
     build: .
     ports:
       - 80:80
+    depends_on: 
+     - lotus-web-modelcheck
+  lotus-web-modelcheck:
+    image: lotus-web-modelcheck
+    build: ./tools/lotus-web-modelCheck
+    ports: 
+      - 8080:8080
+
