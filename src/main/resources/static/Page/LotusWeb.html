@@ -100,7 +100,7 @@
 										</div>
 
 										<a href="#" class="dropdown-item" onClick="POST();">Model Check</a>
-										<a href="#" class="dropdown-item">Tool 2</a>
+										<a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalProbabilisticReachability">Probability Reachable</a>
 									</div>
 
 								</li>
@@ -327,6 +327,102 @@
 		</div>
 	</div>
 
+
+
+	<!-- Modal -->
+    <div class="modal fade" id="modalProbabilisticReachability" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="modalUnreachableCheck" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Probabilistic Reachability</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="probReach_template">Template: </label>
+                            <select id="probReach_template">
+                                <option value="default">Default</option>
+                                <option value="action">P(Action)</option>
+                                <option value="action_~">P(Action1 ^ ~Action2)</option>
+                                <option value="action_after">P(Action1 after Action2)</option>
+                                <option value="action_steps">P(Action1 in X steps)</option>
+                            </select>
+                        </div>
+                    </div> <!-- Template Row -->
+                    <div class="row"> <!-- Choice Row -->
+                        <div class="col-12" id="probReach_States">
+                            <label for="probReach_sourceStates">Source State </label>
+                            <select id="probReach_sourceStates">
+                                <!-- Adicionar via Jquery -->
+                            </select>
+                            <i class="fas fa-arrow-right"></i>
+                            <label for="probReach_destinyStates">Destiny State </label>
+                            <select id="probReach_destinyStates">
+                                <!-- Adicionar via Jquery -->
+                            </select>
+                        </div>
+                        <div class="d-none" id="probReach_Transitions">
+                            <div class="col-12">
+                                <label for="probReach_sourceTransition">Transition(1): </label>
+                                <select id="probReach_sourceTransition">
+                                    <!-- Adicionar via Jquery -->
+                                </select>
+                            </div>
+                            <div id="probReach_t2" class="col-12 d-none">
+                                <label for="probReach_destinyTransition">Transition(2): </label>
+                                <select id="probReach_destinyTransition">
+                                    <!-- Adicionar via Jquery -->
+                                </select>
+                            </div>
+                            <div id="probReach_steps" class="col-12 d-none">
+                                <label for="probReach_steps_N"> in </label>
+                                <input type="number" id="probReach_steps_N">
+                                <span> Steps</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- div class="row">
+                        <div class="col-12" id="probReach_exclude">
+                            <label for="probReach_excluidState">Exclude State(Optional): </label>
+                            <select id="probReach_excluidState">
+
+                            </select>
+                            <label for="probReach_excluidTransition">Exclude Transition(Optional): </label>
+                            <select id="probReach_excluidTransition">
+
+                            </select>
+                        </div>
+                    </div --> <!-- Exclude Row -->
+                    <div class="row">
+                        <div class="col-12" id="probReach_Operation">
+                            <label for="probReach_Operations">Operation: </label>
+                            <select id="probReach_Operations">
+                                <option value="="> = </option>
+                                <option value=">"> > </option>
+                                <option value=">="> >= </option>
+                                <option value="<"> < </option>
+                                <option value="<="> <= </option>
+                                <option value="!="> != </option>
+                            </select>
+                            <label for="probReach_probability"> Probability(%): </label>
+                            <input id="probReach_probability" type="number">
+                            <i id="probReach_result" class="fa fa-lg fa-check btn-success"> </i>
+                        </div>
+                    </div> <!-- Operation Row -->
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="msgProbabilisticReacheableCheck();">Check</button>
+                </div>
+            </div>
+
+            </div>
+        </div>
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 	<script type="text/javascript" src="Scripts/MainScript.js"></script>
@@ -338,6 +434,7 @@
 	<script type="text/javascript" src="Scripts/SimulationScript.js"></script>
 	<script type="text/javascript" src="Scripts/ControlProjectsScript.js"></script>
 	<script type="text/javascript" src="Scripts/LotusScript.js"></script>
+	<script type="text/javascript" src="Scripts/ToolsScript.js"></script>
 
 	<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

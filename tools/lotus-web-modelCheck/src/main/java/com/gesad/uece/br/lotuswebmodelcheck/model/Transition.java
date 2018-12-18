@@ -5,8 +5,8 @@ public class Transition {
     private String action;
 
 
-    private State srcState;
-    private State dstState;
+    private int srcState; // ID Source State
+    private int dstState; // ID Destiny State
 
     private Double probability;
     private String guard;
@@ -22,19 +22,19 @@ public class Transition {
         this.action = action;
     }
 
-    public State getSrcState() {
+    public int getSrcState() {
         return srcState;
     }
 
-    public void setSrcState(State srcState) {
+    public void setSrcState(int srcState) {
         this.srcState = srcState;
     }
 
-    public State getDstState() {
+    public int getDstState() {
         return dstState;
     }
 
-    public void setDstState(State dstState) {
+    public void setDstState(int dstState) {
         this.dstState = dstState;
     }
 

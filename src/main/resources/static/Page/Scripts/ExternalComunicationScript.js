@@ -56,13 +56,47 @@ function MountJsonInfo () {
 
 }
 
-function GET () {
+function mountForReacheableCheck(src, dst, actP, actID, steps, exclude){
+	var json = {};
+	json['transition'] = [];
+	for( key in info_manager.transitions_elements){
 
-	$.get("http://localhost:5000/api/product", function(resultado){
-		console.log(resultado.tasks[0]);
-	});
+		var transition = {};
 
+		transition['srcState'] = parseInt(info_manager.transitions_elements[key].orgState);
+		transition['dstState'] = parseInt(info_manager.transitions_elements[key].dstState);
+		transition['action'] = info_manager.transitions_elements[key].info_transition['label'];
+        if(info_manager.transitions_elements[key].info_transition.label == exclude ){
+            transition['probability'] = 0;
+        }else {
+            transition['probability'] = info_manager.transitions_elements[key].info_transition["probability"];
+        }
+		transition['guard'] = info_manager.transitions_elements[key].info_transition['guard'];
+		transition['visitedTransitionsCount'] = 0;
+		json['transition'].push(transition);
+
+
+	}
+	json['srcState'] = src;// Pegar o Estado do Panel
+	json['dstState'] = dst;// Pegar o Estado do Panel
+
+
+	json['actionTargetID'] = actID; // Pegar o Estado do Panel, É o destino da transição
+	var state_count = 0;
+	for(key in info_manager.state_elements){
+		state_count++;
+	}
+	json['state_count'] = state_count;// Pegar o Estado do Panel
+    if(steps == null){
+        json['steps'] = state_count;
+    }else {
+        json['steps'] = steps;// Pegar o Estado do Panel
+    }
+
+    return json;
 }
+
+
 
 function mountForModelCheck(){
 	var json = [];
@@ -124,15 +158,22 @@ function mountForModelCheck(){
 
 }
 
-function POST () {
 
-	var svg = document.getElementById("container_svg").innerHTML;
-	var JS = mountForModelCheck();
-	
-	$.ajax({
-		url : "http://localhost:8080/modelcheck/?prob=true",
+function GET () {
+
+	$.get("http://localhost:5000/api/product", function(resultado){
+		console.log(resultado.tasks[0]);
+	});
+
+}
+
+var msg2; // Variavel pra pegar o retorno do ajax
+function POST (URL, json) {
+
+	return $.ajax({
+		url : URL,
 		type : 'post',
-		data : JSON.stringify(JS),
+		data : JSON.stringify(json),
 		dataType : 'json',
 		contentType: 'application/json;charset=UTF-8',
 		beforeSend : function(){
@@ -140,7 +181,7 @@ function POST () {
 		}
 	})
 	.done(function(msg){
-		alert(msg);
+		return msg;
 	})
 	.fail(function(jqXHR, textStatus, msg){
 		alert(msg);
@@ -148,9 +189,79 @@ function POST () {
 
 }
 
+function modelCheck(){
+	var url = "http://localhost:8080/modelcheck/?prob=true";
+	var json = mountForModelCheck();
+	POST(url,json);
+}
 
+function reacheableCheck(src, dst, actP, actID,steps, exclude){
+	var url = "http://localhost:8080/modelcheck/reachable/";
+	var json = mountForReacheableCheck(src, dst, actP, actID, steps, exclude);
+	var msg = POST(url,json);
+	msg.done(function (data) {
+        var operation = $('#probReach_Operations option:selected').val();
+        var probability = ( parseInt($('#probReach_probability').val()) )/100;
 
+        switch (operation){
+            case "=":
+                if(data == probability){
+                    $('#probReach_result').addClass('fa-check btn-success');
+                    $('#probReach_result').removeClass('fa-times btn-danger');
+                }else{
+                    $('#probReach_result').addClass('fa-times btn-danger');
+                    $('#probReach_result').removeClass('fa-check btn-success');
+                }
+                break;
+            case ">":
+                if(data > probability){
+                    $('#probReach_result').addClass('fa-check btn-success');
+                    $('#probReach_result').removeClass('fa-times btn-danger');
+                }else{
+                    $('#probReach_result').addClass('fa-times btn-danger');
+                    $('#probReach_result').removeClass('fa-check btn-success');
+                }
+                break;
+            case ">=":
+                if(data >= probability){
+                    $('#probReach_result').addClass('fa-check btn-success');
+                    $('#probReach_result').removeClass('fa-times btn-danger');
+                }else{
+                    $('#probReach_result').addClass('fa-times btn-danger');
+                    $('#probReach_result').removeClass('fa-check btn-success');
+                }
+                break;
+            case "<":
+                if(data < probability){
+                    $('#probReach_result').addClass('fa-check btn-success');
+                    $('#probReach_result').removeClass('fa-times btn-danger');
+                }else{
+                    $('#probReach_result').addClass('fa-times btn-danger');
+                    $('#probReach_result').removeClass('fa-check btn-success');
+                }
+                break;
+            case "<=":
+                if(data <= probability){
+                    $('#probReach_result').addClass('fa-check btn-success');
+                    $('#probReach_result').removeClass('fa-times btn-danger');
+                }else{
+                    $('#probReach_result').addClass('fa-times btn-danger');
+                    $('#probReach_result').removeClass('fa-check btn-success');
+                }
+                break;
+            case "!=":
+                if(data != probability){
+                    $('#probReach_result').addClass('fa-check btn-success');
+                    $('#probReach_result').removeClass('fa-times btn-danger');
+                }else{
+                    $('#probReach_result').addClass('fa-times btn-danger');
+                    $('#probReach_result').removeClass('fa-check btn-success');
+                }
+                break;
+        }
 
+    });
+}
 
 
 
