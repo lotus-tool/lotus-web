@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>LotuS Web</title>
+	<meta charset="utf-8">
+	<link rel="shortcut icon" href="Page/Images/Webp.net-resizeimage.png">
+	<link rel="stylesheet" type="text/css" href="Page/LotusStyle.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+	<script type="text/javascript" src="Page/Scripts/HeadScript.js"></script>
+</head>
+<body>
+
+	<div class="my-0 py-0">
+
+		<svg width="0px" height="0px">
+
+			<defs>
+				<g id="arrow" fill="transparent" transform="rotate(0)">
+					<g class="marker_class" transform="translate(0 0) rotate(0)">
+						<path d="M0,0 V12 L9,6 z" onmousedown="f_marker_follow(this)"/>
+						<circle cx="6" cy="25" r="4" fill="transparent" onclick="showTextMarker(event)" onmouseenter="mouseEnterMarker(event)" onmouseleave="mouseLeaveMarker(event)" style="pointer-events: auto;"/>
+					</g>
+				</g>
+
+				<g class="text_marker" font-size="14px" text-anchor="middle" font-family="Arial">
+					<text y="0">
+						<tspan class="probability_marker_display">( </tspan>
+						<tspan class="probability_marker probability_marker_display" onclick="changeText(event)"></tspan>
+						<tspan class="probability_marker_display"> )</tspan>
+						<tspan class="guard_marker_display">[ </tspan>
+						<tspan class="guard_marker guard_marker_display" onclick="changeText(event)"></tspan>
+						<tspan class="guard_marker_display"> ]</tspan>
+						<tspan class="label_marker label_marker_display" onclick="changeText(event)">Label</tspan>
+					</text>
+				</g>
+
+				<foreignObject class="text_editable_input" style="width: 100px;" x="-50">
+					<div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: center; justify-content:center;">
+						<input type="text" style="font-size: 14px;"></input>
+					</div>
+				</foreignObject>
+
+				<foreignObject class="dropdown_menu" x="100" y="100">
+					<div>
+						<ul>
+							<li><a onclick="dragMoveEl()">Drag/Transition</a></li>
+							<li><a onclick="isInitialState()">Initial State</a></li>
+							<li><a onclick="isFinalState()">Final State</a></li>
+							<li><a onclick="remove_Element()">Remove</a></li>	
+						</ul>
+					</div>
+				</foreignObject>
+
+				<circle id="original_state" class="copy_el" cx="20" cy="20" r="20" fill="blue" onmousedown="copy_Start(event)" transform="translate(5 5)" stroke="black" stroke-width="2px" />
+
+			</defs>
+
+		</svg>
+
+	</div>
+
+	<div id="NavBarFunctions" class="row">
+			
+		<nav class="navbar fixed-top navbar-expand-lg navbar-dark">
+			
+			<div class="container">
+				
+				<div class="col-1 mx-0 px-0">
+					<!-- Bandal -->
+					<a href="#" class="navbar-brand mb-0">
+						<img src="Page/Images/LogoLotusWeb.png">
+					</a>
+				</div>
+
+				<div class="col-11">
+					<div class="row">
+						<div class="col-11 justify-content-center text-center">
+							<input type="text" name="Project_Name" value="Project Name" class="text-center text-light h3 mb-0">
+						</div>
+						<div class="collapse navbar-collapse col-12" id="navbarOptions">
+
+							<ul class="navbar-nav mr-auto">
+								<li class="nav-item">
+									<a href="#" class="nav-link h5 my-0 py-0">File</a>
+								</li>
+								<li class="nav-item dropdown">
+									
+									<a href="#" class="nav-link h5 my-0 py-0" data-toggle="dropdown">Tools</a>
+									
+									<div class="dropdown-menu text-center dropright">
+										
+										<a href="#" class="dropdown-item dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Diagram Type
+										</a>
+
+										<div class="dropdown-menu text-center">
+											<a href="#" class="dropdown-item">LTS</a>
+											<a href="#" class="dropdown-item">PLTS</a>
+										</div>
+
+										<a href="#" class="dropdown-item" onClick="POST();">Model Check</a>
+										<a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalProbabilisticReachability">Probability Reachable</a>
+									</div>
+
+								</li>
+								<li class="nav-item">
+									<a href="#" class="nav-link h5 my-0 py-0">Extra</a>
+								</li>
+							</ul>
+
+							<ul class="navbar-nav ml-auto">
+					
+								<li class="nav-item dropdown">
+									<a href="#" class="nav-link dropdown-toggle h5 my-0 py-0" data-toggle="dropdown" id="navDrop">Social</a>
+									<div class="dropdown-menu">
+										<a href="#" class="dropdown-item">Facebook</a>
+										<a href="#" class="dropdown-item">Twitter</a>
+										<a href="#" class="dropdown-item">Instagram</a>
+									</div>
+								</li>
+
+								<li class="nav-item">
+									<a href="#" class="nav-link h5 my-0 py-0">
+										<i class="far fa-question-circle"></i>
+									</a>
+								</li>
+
+							</ul>
+
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</nav>
+
+	</div>
+
+	<div id="spaceNav" class="row"></div>
+
+	<div id="WorkSpace" class="container-fluid">
+
+		<div class="row">
+
+			<div class="col-12">
+
+				<div id="DefaultFunctions" class="row pb-1">
+
+					<div class="col-2">
+						<div class="row justify-content-center"></div>
+					</div>
+					<div class="col-8">
+						<div class="row justify-content-center">
+							<!-- Default Mouse -->
+							<a href="#" onclick="defaultMouse(event)">
+								<i class="fas fa-mouse-pointer mr-4"></i>
+							</a>
+							<!-- Drag/Transition -->
+							<a href="#" onclick="DragMoveEl()">
+								<i class="fas fa-arrows-alt mr-4"></i>
+							</a>
+							<!-- Remove State/Transition -->
+							<a href="#" data-toggle="modal" data-target="#modalRemoveState">
+								<i class="fas fa-trash-alt mr-4"></i>
+							</a>
+							<div class="mr-5"></div>
+							<!-- Initial State -->
+							<a href="#" onclick="IsInitialState()">
+								<i class="fas fa-caret-right" style="transform: translate(60%,0%);"></i>
+								<i class="far fa-circle mr-4"></i>
+							</a>
+							<!-- Final State -->
+							<a href="#" onclick="IsFinalState()">
+								<i class="fas fa-bullseye mr-4"></i>
+							</a>
+							<!-- Create State -->
+							<a href="#" onmousedown="copy_Start(event)">
+								<i class="far fa-circle mr-4"></i>
+							</a>
+							<div class="mr-5"></div>
+							<!-- Simulation -->
+							<a href="#" onclick="ModeAnimation(event)">
+								<i id="btnSimulation" class="far fa-play-circle mr-4"></i>
+							</a>
+							<!-- Execution -->
+							<a href="#" onclick="AlternateSimExec(event)">
+								<i id="btnExecution" class="fas fa-gamepad"></i>
+							</a>
+						</div>
+					</div>
+					<div class="col-2">
+						<div class="row justify-content-center">
+							<div style="width: 30px; height: 30px;">
+								<img src="Page/Images/google-drive-ikon_50x50.png" class="img-fluid">
+							</div>	
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+
+					<div id="Elements" class="col-2">
+						<div class="row mb-3">
+
+							<div class="col-12 justify-content-center">
+
+								<i id="Project1" class="fas fa-folder-open"></i>
+								<label for="Project1">Project 1</label>
+								<div class="Diagrams">
+									<div class="col-12">
+										<i id="Diag1Proj1" class="fas fa-sign-in-alt"></i>
+										<label for="Diag1Proj1">Diagram 1</label>
+									</div>
+									<div class="col-12">
+										<i id="Diag2Proj1" class="fas fa-sign-in-alt"></i>
+										<label for="Diag2Proj1">Diagram 2</label>
+									</div>
+								</div>
+
+							</div>
+
+							<div class="col-12 justify-content-center">
+
+								<i id="Project2" class="fas fa-folder-open"></i>
+								<label for="Project2">Project 2</label>
+
+							</div>
+
+						</div>
+					</div>
+
+					<div id="WorkStation" class="col-8">
+						<div id="RealWorkStation" class="row">
+							<svg id="container_svg" width="2000px" height="2000px">
+								<g id="startLines"></g>
+							</svg>
+						</div>
+					</div>
+
+					<div id="Show_Simulation_Execution" class="col-2">
+						<div class="row justify-content-center text-center">
+							<div id="Simulation" class="col-12 px-0" style="display: none;">
+								<table class="table">
+									<thead class="thead-dark">
+										<tr>
+											<th scope="col">#</th>
+											<th scope="col">Transition</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div id="Execution" class="col-12 px-0" style="display: none;">
+								<table class="table">
+									<thead class="thead-dark">
+										<tr>
+											<th scope="col">#</th>
+											<th scope="col">Transition Exe</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div id="InfoTransition" class="col-12 mt-3">
+								<form>
+									<div class="col-12 justify-content-center">
+										<h4 class="">*Transition*</h4>
+									</div>
+									<div class="form-row mt-3">
+										<div class="form-group">
+											
+											<label for="inputLabelTransition">Label</label>
+											<input type="text" name="Label" class="form-control text-center" id="inputLabelTransition" placeholder="Label">
+
+										</div>
+									</div>
+									<div class="form-row">
+										<div class="form-group">
+											
+											<label for="inputProbabilityTransition">Probability</label>
+											<input type="text" name="Probability" class="form-control text-center" id="inputProbabilityTransition" placeholder="1.00">
+
+										</div>
+									</div>
+									<div class="form-row">
+										<div class="form-group">
+											
+											<label for="inputGuardTransition">Guard</label>
+											<input type="text" name="Guard" class="form-control text-center" id="inputGuardTransition" placeholder="Guard">
+
+										</div>
+									</div>
+								</form>
+								<img src="Page/Images/Lotus Web Logo.png" class="img-fluid">
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="modal fade" id="modalRemoveState" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content text-center">
+				<div class="modal-header">
+					<h4 class="" id="modalRemoveStateLabel">
+						This state will be deleted!!!
+					</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+				</div>
+				<div class="modal-body">
+					<h5 class="mb-4">Are you sure?</h5>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">
+						Cancel
+					</button>
+      				<button type="button" class="btn btn-danger ml-5" data-dismiss="modal" onclick="RemoveState()">
+      					Delete
+      				</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<!-- Modal -->
+    <div class="modal fade" id="modalProbabilisticReachability" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="modalUnreachableCheck" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Probabilistic Reachability</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="probReach_template">Template: </label>
+                            <select id="probReach_template">
+                                <option value="default">Default</option>
+                                <option value="action">P(Action)</option>
+                                <option value="action_~">P(Action1 ^ ~Action2)</option>
+                                <option value="action_after">P(Action1 after Action2)</option>
+                                <option value="action_steps">P(Action1 in X steps)</option>
+                            </select>
+                        </div>
+                    </div> <!-- Template Row -->
+                    <div class="row"> <!-- Choice Row -->
+                        <div class="col-12" id="probReach_States">
+                            <label for="probReach_sourceStates">Source State </label>
+                            <select id="probReach_sourceStates">
+                                <!-- Adicionar via Jquery -->
+                            </select>
+                            <i class="fas fa-arrow-right"></i>
+                            <label for="probReach_destinyStates">Destiny State </label>
+                            <select id="probReach_destinyStates">
+                                <!-- Adicionar via Jquery -->
+                            </select>
+                        </div>
+                        <div class="d-none" id="probReach_Transitions">
+                            <div class="col-12">
+                                <label for="probReach_sourceTransition">Transition(1): </label>
+                                <select id="probReach_sourceTransition">
+                                    <!-- Adicionar via Jquery -->
+                                </select>
+                            </div>
+                            <div id="probReach_t2" class="col-12 d-none">
+                                <label for="probReach_destinyTransition">Transition(2): </label>
+                                <select id="probReach_destinyTransition">
+                                    <!-- Adicionar via Jquery -->
+                                </select>
+                            </div>
+                            <div id="probReach_steps" class="col-12 d-none">
+                                <label for="probReach_steps_N"> in </label>
+                                <input type="number" id="probReach_steps_N">
+                                <span> Steps</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- div class="row">
+                        <div class="col-12" id="probReach_exclude">
+                            <label for="probReach_excluidState">Exclude State(Optional): </label>
+                            <select id="probReach_excluidState">
+
+                            </select>
+                            <label for="probReach_excluidTransition">Exclude Transition(Optional): </label>
+                            <select id="probReach_excluidTransition">
+
+                            </select>
+                        </div>
+                    </div --> <!-- Exclude Row -->
+                    <div class="row">
+                        <div class="col-12" id="probReach_Operation">
+                            <label for="probReach_Operations">Operation: </label>
+                            <select id="probReach_Operations">
+                                <option value="="> = </option>
+                                <option value=">"> > </option>
+                                <option value=">="> >= </option>
+                                <option value="<"> < </option>
+                                <option value="<="> <= </option>
+                                <option value="!="> != </option>
+                            </select>
+                            <label for="probReach_probability"> Probability(%): </label>
+                            <input id="probReach_probability" type="number">
+                            <i id="probReach_result" class="fa fa-lg fa-check btn-success"> </i>
+                        </div>
+                    </div> <!-- Operation Row -->
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="msgProbabilisticReacheableCheck();">Check</button>
+                </div>
+            </div>
+
+            </div>
+        </div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<script type="text/javascript" src="Page/Scripts/MainScript.js"></script>
+	<script type="text/javascript" src="Page/Scripts/TransitionsScript.js"></script>
+	<script type="text/javascript" src="Page/Scripts/StatesScript.js"></script>
+	<script type="text/javascript" src="Page/Scripts/InfoTransitionScript.js"></script>
+	<script type="text/javascript" src="Page/Scripts/MainFunctionsScript.js"></script>
+	<script type="text/javascript" src="Page/Scripts/ExternalComunicationScript.js"></script>
+	<script type="text/javascript" src="Page/Scripts/SimulationScript.js"></script>
+	<script type="text/javascript" src="Page/Scripts/ControlProjectsScript.js"></script>
+	<script type="text/javascript" src="Page/Scripts/LotusScript.js"></script>
+	<script type="text/javascript" src="Page/Scripts/ToolsScript.js"></script>
+
+	<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

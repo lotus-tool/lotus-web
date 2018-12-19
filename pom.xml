@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.gesad.uece.br</groupId>
-	<artifactId>lotus-web-modelCheck</artifactId>
+	<artifactId>lotus-web</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>ModelCheck</name>
-	<description>Check Model Deadlock, Unreacheable and Probabilities occurrenci</description>
+	<name>LotusWeb</name>
+	<description>LoTuS</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -37,6 +37,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web-services</artifactId>
 		</dependency>
+		<!-- <dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-function-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter</artifactId>
+		</dependency> -->
 		<dependency>
 			<groupId>org.springframework.session</groupId>
 			<artifactId>spring-session-core</artifactId>

@@ -190,13 +190,13 @@ function POST (URL, json) {
 }
 
 function modelCheck(){
-	var url = "http://localhost:8080/modelcheck/?prob=true";
+	var url = "https://lotus-modelcheck-microservice.herokuapp.com/modelcheck/?prob=true";
 	var json = mountForModelCheck();
 	POST(url,json);
 }
 
 function reacheableCheck(src, dst, actP, actID,steps, exclude){
-	var url = "http://localhost:8080/modelcheck/reachable/";
+	var url = "https://lotus-modelcheck-microservice.herokuapp.com/modelcheck/reachable/";
 	var json = mountForReacheableCheck(src, dst, actP, actID, steps, exclude);
 	var msg = POST(url,json);
 	msg.done(function (data) {
