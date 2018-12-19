@@ -101,12 +101,13 @@ function mountForReacheableCheck(src, dst, actP, actID, steps, exclude){
 function mountForModelCheck(){
 	var json = [];
 
+    if(info_manager.initial_state == undefined){alert("Initial State not defined");}
 	for ( key in info_manager.state_elements ){
 		var state = {};
 
 		state['id'] = key;
 		state['label'] = key;
-		
+
 		var initil = info_manager.state_elements[key].el.parentElement.id == info_manager.initial_state.id? true : false;
 		state['isInitial'] = initil;
 		
@@ -167,7 +168,6 @@ function GET () {
 
 }
 
-var msg2; // Variavel pra pegar o retorno do ajax
 function POST (URL, json) {
 
 	return $.ajax({
@@ -192,7 +192,10 @@ function POST (URL, json) {
 function modelCheck(){
 	var url = "https://lotus-modelcheck-microservice.herokuapp.com/modelcheck/?prob=true";
 	var json = mountForModelCheck();
-	POST(url,json);
+	var msg = POST(url,json);
+	msg.done(function (data) {
+       alert(data);
+    });
 }
 
 function reacheableCheck(src, dst, actP, actID,steps, exclude){
