@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>LotuS Web</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="shortcut icon" href="images/Webp.net-resizeimage.png">
+	<link rel='stylesheet' href='/stylesheets/LotusStyle.css' />
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=ZCOOL+QingKe+HuangYou" rel="stylesheet">
+
+	<script type="text/javascript" src="javascripts/HeadScript.js"></script>
+
+	<script type="text/javascript">
+		
+		// The Browser API key obtained from the Google API Console.
+	    // Replace with your own Browser API key, or your own key.
+	    var developerKey = 'AIzaSyBUJvpnMBxabPImSBfAV4naFm0nUsfzqWs';
+
+	    // The Client ID obtained from the Google API Console. Replace with your own Client ID.
+	    var clientId = "668823504963-mnk5p0qcm5602hi32r2e8g8pespp5flc.apps.googleusercontent.com";
+
+	    // Replace with your own project number from console.developers.google.com.
+	    // See "Project number" under "IAM & Admin" > "Settings"
+	    var appId = "668823504963";
+
+	    // Scope to use to access user's Drive items.
+	    /*var scope = ['https://www.googleapis.com/auth/drive'];*/
+
+	    /*const scope = ['https://www.googleapis.com/auth/drive.metadata.readonly',
+		'https://www.googleapis.com/auth/drive',
+		'https://www.googleapis.com/auth/drive.appdata',
+		'https://www.googleapis.com/auth/drive.file',
+		'https://www.googleapis.com/auth/drive.metadata',
+		'https://www.googleapis.com/auth/drive.photos.readonly',
+		'https://www.googleapis.com/auth/drive.readonly',
+		'https://www.googleapis.com/auth/drive.scripts'];*/
+
+		const scope = ['https://www.googleapis.com/auth/drive',
+		'https://www.googleapis.com/auth/drive.file'];
+
+		function DownloadFilePicker() {
+			
+			var pickerApiLoaded = false;
+		    var oauthToken;
+
+		    /*var gapi = require('gapi');*/
+
+		    // Use the Google API Loader script to load the google.picker script.
+		    function loadPickerDownload() {
+		      gapi.load('auth', {'callback': onAuthApiLoadDownload});
+		      gapi.load('picker', {'callback': onPickerApiLoadDownload});
+		    }
+
+		    function onAuthApiLoadDownload() {
+		      window.gapi.auth.authorize(
+		          {
+		            'client_id': clientId,
+		            'scope': scope,
+		            'immediate': false
+		          },
+		          handleAuthResultDownload);
+		    }
+
+		    function onPickerApiLoadDownload() {
+		      pickerApiLoaded = true;
+		      createPickerDownload();
+		    }
+
+		    function handleAuthResultDownload(authResult) {
+		      if (authResult && !authResult.error) {
+		        oauthToken = authResult.access_token;
+		        createPickerDownload();
+		      }
+		    }
+
+		    // Create and render a Picker object for searching images.
+		    function createPickerDownload() {
+		      if (pickerApiLoaded && oauthToken) {
+		        var view = new google.picker.View(google.picker.ViewId.DOCS);
+		        view.setMimeTypes("application/json");
+		        var picker = new google.picker.PickerBuilder()
+		            .enableFeature(google.picker.Feature.NAV_HIDDEN)
+		            .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+		            .setAppId(appId)
+		            .setOAuthToken(oauthToken)
+		            .addView(view)
+		            .setDeveloperKey(developerKey)
+		            .setCallback(pickerCallbackDownload)
+		            .build();
+		         picker.setVisible(true);
+		      }
+		    }
+
+		    // A simple callback implementation.
+		    function pickerCallbackDownload(data) {
+		      if (data.action == google.picker.Action.PICKED) {
+		        var fileId = data.docs[0].id;
+		        alert('The user selected: ' + fileId);
+		        info_manager.FileId = fileId;
+		      }
+		    }
+
+		    loadPickerDownload();
+
+		}
+
+		function UploadFilePicker () {
+			
+			var pickerApiLoaded = false;
+		    var oauthToken;
+
+		    /*var gapi = require('gapi');*/
+
+		    // Use the Google API Loader script to load the google.picker script.
+		    function loadPickerUpload() {
+		      gapi.load('auth', {'callback': onAuthApiLoadUpload});
+		      gapi.load('picker', {'callback': onPickerApiLoadUpload});
+		    }
+
+		    function onAuthApiLoadUpload() {
+		      window.gapi.auth.authorize(
+		          {
+		            'client_id': clientId,
+		            'scope': scope,
+		            'immediate': false
+		          },
+		          handleAuthResultUpload);
+		    }
+
+		    function onPickerApiLoadUpload() {
+		      pickerApiLoaded = true;
+		      createPickerUpload();
+		    }
+
+		    function handleAuthResultUpload(authResult) {
+		      if (authResult && !authResult.error) {
+		        oauthToken = authResult.access_token;
+		        createPickerUpload();
+		      }
+		    }
+
+		    // Create and render a Picker object for searching images.
+		    function createPickerUpload() {
+		      if (pickerApiLoaded && oauthToken) {
+		        var view = new google.picker.DocsView()
+				view.setIncludeFolders(true) 
+				view.setMimeTypes('application/vnd.google-apps.folder');
+				view.setSelectFolderEnabled(true);
+
+		        var picker = new google.picker.PickerBuilder()
+		            .enableFeature(google.picker.Feature.NAV_HIDDEN)
+		            .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+		            .setAppId(appId)
+		            .setOAuthToken(oauthToken)
+		            .addView(view)
+		            .setDeveloperKey(developerKey)
+		            .setCallback(pickerCallbackUpload)
+		            .build();
+		         picker.setVisible(true);
+		      }
+		    }
+
+		    // A simple callback implementation.
+		    function pickerCallbackUpload(data) {
+		      if (data.action == google.picker.Action.PICKED) {
+		        var FolderId = data.docs[0].id;
+		        alert('The user selected: ' + FolderId);
+		        info_manager.FolderId = FolderId;
+		      }
+		    }
+
+		    loadPickerUpload();
+
+		}
+
+	</script>
+
+</head>
+<body onload="autoSaveSvg()">
+
+	<div id="HiddenElements">
+
+		<svg width="0px" height="0px">
+
+			<defs>
+				<g id="arrow" fill="transparent" transform="rotate(0)">
+					<g class="marker_class" transform="translate(0 0) rotate(0)">
+						<path d="M0,0 V12 L9,6 z" onmousedown="f_marker_follow(this)"/>
+						<circle cx="6" cy="25" r="4" fill="transparent" onclick="showTextMarker(event)" onmouseenter="mouseEnterMarker(event)" onmouseleave="mouseLeaveMarker(event)" style="pointer-events: auto;"/>
+					</g>
+				</g>
+
+				<g class="text_marker" font-size="14px" text-anchor="middle" font-family="Arial">
+					<text y="0">
+						<tspan class="probability_marker_display">( </tspan>
+						<tspan class="probability_marker probability_marker_display" onclick="changeText(event)"></tspan>
+						<tspan class="probability_marker_display"> )</tspan>
+						<tspan class="guard_marker_display">[ </tspan>
+						<tspan class="guard_marker guard_marker_display" onclick="changeText(event)"></tspan>
+						<tspan class="guard_marker_display"> ]</tspan>
+						<tspan class="label_marker label_marker_display" onclick="changeText(event)">Label</tspan>
+					</text>
+				</g>
+
+				<foreignObject class="text_editable_input" style="width: 100px;" x="-50">
+					<div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: center; justify-content:center;">
+						<input type="text" style="font-size: 14px;"></input>
+					</div>
+				</foreignObject>
+
+				<foreignObject class="dropdown_menu" x="100" y="100">
+					<div>
+						<ul>
+							<li><a onclick="dragMoveEl()">Drag/Transition</a></li>
+							<li><a onclick="isInitialState()">Initial State</a></li>
+							<li><a onclick="isFinalState()">Final State</a></li>
+							<li><a onclick="remove_Element()">Remove</a></li>	
+						</ul>
+					</div>
+				</foreignObject>
+
+				<circle id="original_state" class="copy_el" cx="20" cy="20" r="20" fill="blue" onmousedown="copy_Start(event)" transform="translate(5 5)" stroke="black" stroke-width="2px" />
+
+			</defs>
+
+		</svg>
+
+	</div>
+
+	<div id="NavBarFunctions">
+			
+		<div class="container-fluid">
+			
+			<nav class="navbar navbar-expand-lg navbar-dark">
+				
+				<div class="col-1 mx-0 px-0">
+					<!-- Bandal -->
+					<a href="#" class="navbar-brand mb-0">
+						<img src="images/LogoLotusWeb.png">
+					</a>
+				</div>
+
+				<div class="col-11">
+					<div class="row">
+						<div class="col-11 justify-content-center text-center">
+							<input type="text" name="Project_Name" value="Project Name" class="text-center text-light h3 mb-0">
+						</div>
+						<div class="collapse navbar-collapse col-12" id="navbarOptions">
+
+							<ul class="navbar-nav mr-auto">
+
+								<li class="nav-item">
+									<a href="#" class="nav-link h5 my-0 py-0">File</a>
+								</li>
+
+								<li class="nav-item">
+
+									<div class="dropdown">
+										
+										<a href="#" class="nav-link h5 my-0 py-0" data-toggle="dropdown" id="dropdownMenuButton">Tools</a>
+										
+										<div class="dropdown-menu text-center dropright" aria-labelledby="dropdownMenuButton">
+											
+											<a href="#" class="dropdown-item dropdown-toggle" data-toggle="dropdown" id="DigTypeDrop">Diagram Type</a>
+
+											<div class="dropdown-menu text-center" aria-labelledby="DigTypeDrop">
+												<a href="#" class="dropdown-item">LTS</a>
+												<a href="#" class="dropdown-item">PLTS</a>
+											</div>
+
+											<a href="#" class="dropdown-item" onclick="mountForModelCheck()">Model Checking</a>
+											
+											<a href="#" id="ProbabReach" class="dropdown-item" onclick="AlternateSimExec(event)">Probabilistic Reachability</a>
+
+											<a href="#" id="buttonCompilerModal" class="dropdown-item" data-dismiss="modal" data-toggle="modal" data-target="#modalCompiler" onclick="editorConfig()">Compiler</a>
+
+										</div>
+
+									</div>
+
+								</li>
+								<li class="nav-item">
+									<a href="#" class="nav-link h5 my-0 py-0">Extra</a>
+								</li>
+							</ul>
+
+							<ul class="navbar-nav ml-auto">
+					
+								<li class="nav-item dropdown">
+									<a href="#" class="nav-link dropdown-toggle h5 my-0 py-0" data-toggle="dropdown" id="navDrop">Social</a>
+									<div class="dropdown-menu">
+										<a href="#" class="dropdown-item">Facebook</a>
+										<a href="#" class="dropdown-item">Twitter</a>
+										<a href="#" class="dropdown-item">Instagram</a>
+									</div>
+								</li>
+
+								<li class="nav-item">
+									<a href="#" class="nav-link h5 my-0 py-0">
+										<i class="far fa-question-circle"></i>
+									</a>
+								</li>
+
+							</ul>
+
+						</div>
+					</div>
+				</div>
+
+			</nav>
+
+		</div>
+
+	</div>
+
+	<div id="WorkSpace" class="container-fluid mt-1">
+
+		<div class="row">
+
+			<div class="col-12">
+
+				<div id="DefaultFunctions" class="row pb-1">
+
+					<div class="col-2">
+						<div class="row justify-content-center"></div>
+					</div>
+					<div class="col-8">
+						<div class="row justify-content-center">
+							<!-- Default Mouse -->
+							<a href="#" onclick="defaultMouse(event)">
+								<i class="fas fa-mouse-pointer mr-4"></i>
+							</a>
+							<!-- Drag/Transition -->
+							<a href="#" onclick="DragMoveEl()">
+								<i class="fas fa-arrows-alt mr-4"></i>
+							</a>
+							<!-- Remove State/Transition -->
+							<a href="#" data-toggle="modal" data-target="#modalRemoveState">
+								<i class="fas fa-trash-alt mr-4"></i>
+							</a>
+							<div class="mr-5"></div>
+							<!-- Initial State -->
+							<a href="#" onclick="IsInitialState()">
+								<i class="fas fa-caret-right" style="transform: translate(60%,0%);"></i>
+								<i class="far fa-circle mr-4"></i>
+							</a>
+							<!-- Final State -->
+							<a href="#" onclick="IsFinalState()">
+								<i class="fas fa-bullseye mr-4"></i>
+							</a>
+							<!-- Create State -->
+							<a href="#" onmousedown="copy_Start(event)">
+								<i class="far fa-circle mr-4"></i>
+							</a>
+							<div class="mr-5"></div>
+							<!-- Simulation -->
+							<a href="#" onclick="ModeAnimation(event)">
+								<i id="btnSimulation" class="far fa-play-circle mr-4"></i>
+							</a>
+							<!-- Execution -->
+							<a href="#" onclick="AlternateSimExec(event)">
+								<i id="btnExecution" class="fas fa-gamepad"></i>
+							</a>
+						</div>
+					</div>
+					<div class="col-2">
+						<div class="row justify-content-center">
+							<div style="width: 30px; height: 30px;" data-toggle="modal" data-target="#modalApiDrive">
+								<img src="images/google-drive-ikon_50x50.png" class="img-fluid">
+							</div>	
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+
+					<div id="Elements" class="col-2">
+						<div class="row">
+
+							<p class="col-12"></p>
+
+							<!-- <div class="col-12 justify-content-center">
+
+								<i id="Project1" class="fas fa-folder-open"></i>
+								<label for="Project1">Project 1</label>
+								<i class="fas fa-caret-down ml-1" onclick="ShowComponents(event)"></i>
+
+								<div class="Components">
+									<div class="col-12" onclick="ShowSVGComponent(ev)">
+										<i id="Diag1Proj1" class="fas fa-sign-in-alt"></i>
+										<label for="Diag1Proj1">Component 1</label>
+									</div>
+									<div class="col-12">
+										<i id="Diag2Proj1" class="fas fa-sign-in-alt"></i>
+										<label for="Diag2Proj1">Component 2</label>
+									</div>
+									<i class="far fa-plus-square col-12 addComponent ml-5" onclick="NewComponent(event)"></i>
+								</div>
+
+							</div> -->
+
+							<i class="far fa-plus-square col-12 addProject" onclick="NewProject(event)"></i>
+
+						</div>
+					</div>
+
+					<div id="WorkStation" class="col-8">
+						<div id="RealWorkStation" class="row">
+							<!-- <svg id="container_svg" width="2000px" height="2000px" onload="testett(event)">
+								<g id="startLines"></g>
+							</svg> -->
+						</div>
+					</div>
+
+					<div id="Show_Simulation_Execution" class="col-2">
+						<div class="row justify-content-center text-center">
+							<div id="Simulation" class="col-12 px-0" style="display: none;">
+								<table class="table">
+									<thead class="thead-dark">
+										<tr>
+											<th scope="col">#</th>
+											<th scope="col">Transition</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div id="Execution" class="col-12 px-0" style="display: none;">
+								<table class="table">
+									<thead class="thead-dark">
+										<tr>
+											<th scope="col">#</th>
+											<th scope="col">Transition Exe</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<div id="InfoTransition" class="col-12 mt-3">
+								<form>
+									<div class="col-12 justify-content-center">
+										<h4 class="">*Transition*</h4>
+									</div>
+									<div class="form-row mt-3">
+										<div class="form-group">
+											
+											<label for="inputLabelTransition">Label</label>
+											<input type="text" name="Label" class="form-control text-center" id="inputLabelTransition" placeholder="Label">
+
+										</div>
+									</div>
+									<div class="form-row">
+										<div class="form-group">
+											
+											<label for="inputProbabilityTransition">Probability</label>
+											<input type="text" name="Probability" class="form-control text-center" id="inputProbabilityTransition" placeholder="1.00">
+
+										</div>
+									</div>
+									<div class="form-row">
+										<div class="form-group">
+											
+											<label for="inputGuardTransition">Guard</label>
+											<input type="text" name="Guard" class="form-control text-center" id="inputGuardTransition" placeholder="Guard">
+
+										</div>
+									</div>
+								</form>
+							</div>
+							<div id="ProbabReachTab" class="col-12 mt-3" style="display: none;">
+								<form>
+									<div class="col-12 justify-content-center mb-4">
+										<h4>Probabilistic Reachability</h4>
+									</div>
+									<div class="form-row">
+										<div class="form-group">
+											<label for="Template">Template</label>
+											<select class="custom-select" id="Template" onchange="ChangeTemplateProbabReach()">
+												<option value="1">Default</option>
+												<option value="2">P(Action)</option>
+												<option value="3">P(Action1 ^ ~Action2)</option>
+												<option value="4">P(Action1 after Action2)</option>
+												<option value="5">P(Action1 in X steps)</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-row mt-1">
+										<div class="col-7">
+											<label for="OriginStateTranstModelC" class="col-form-label">Origin State</label>
+										</div>
+										<div class="col-5">
+											<select id="OriginStateTranstModelC" class="custom-select form-control">
+											</select>
+										</div>
+									</div>
+
+									<div class="form-row mt-3">
+										<div class="col-7">
+											<label for="DestStateTranstModelC" class="col-form-label">Destiny State</label>
+										</div>
+										<div class="col-5">
+											<select id="DestStateTranstModelC" class="custom-select form-control">
+											</select>
+										</div>
+									</div>
+
+									<div class="form-row mt-3">
+										<div class="col-7">
+											<label for="OperationModelC" class="col-form-label">Operation</label>
+										</div>
+										<div class="col-5">
+											<select id="OperationModelC" class="custom-select form-control form-control-sm">
+												<option value="1">=</option>
+												<option value="2">></option>
+												<option value="3">>=</option>
+												<option value="4"><</option>
+												<option value="5"><=</option>
+												<option value="6">!=</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-row mt-3">
+										<div class="col-7">
+											<label for="ProbabilityModelC" class="col-form-label">Probability</label>
+										</div>
+										<div class="col-5">
+											<input id="ProbabilityModelC" value="1" type="number" name="" class="form-control" min="0" max="1" step="0.1" oninput="verifyProbProbabReach(event)">
+										</div>
+									</div>
+
+									<div class="form-row mt-3">
+										<div class="col-7">
+											<label for="StepsModelC" class="col-form-label">Steps</label>
+										</div>
+										<div class="col-5">
+											<input id="StepsModelC" value="0" type="number" name="" class="form-control" min="0" step="1" readonly>
+										</div>
+									</div>
+
+									<div class="row mt-3 justify-content-center">
+										<button id="ProbabReachCancel" onclick="AlternateSimExec(event)" type="button" class="btn btn-danger mr-3">Cancel</button>
+										<button id="ProbabReachCalculate" onclick="ProbabilisticReacheableCheck()" type="button" class="btn btn-secondary">Calculate</button>
+									</div>
+
+									<div class="row mt-3 justify-content-center">
+										<i class="far fa-thumbs-up" style="font-size: 20px; display: none;"></i>
+										<!-- <i class="far fa-thumbs-down"></i> -->
+									</div>
+
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="modal fade" id="modalRemoveState" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content text-center">
+				<div class="modal-header">
+					<h4 class="" id="modalRemoveStateLabel">
+						This state will be deleted!!!
+					</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+				</div>
+				<div class="modal-body">
+					<h5 class="mb-4">Are you sure?</h5>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">
+						Cancel
+					</button>
+      				<button type="button" class="btn btn-danger ml-5" data-dismiss="modal" onclick="RemoveState()">
+      					Delete
+      				</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modalApiDrive" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content text-center">
+				<div class="modal-body">
+					<button type="button" class="btn btn-primary col-8 mb-2" data-dismiss="modal" onclick="DownloadProjectDrive()">
+						Open Project
+					</button>
+      				<button type="button" class="btn btn-primary col-8" data-dismiss="modal" data-toggle="modal" data-target="#modalApiDriveUpload" onclick="loadProjectsForApiModel(event)">
+      					Save Project
+      				</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modalApiDriveUpload" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content text-center">
+				<div class="modal-body mb-0">
+					<button type="button" class="btn btn-outline-primary col-8 mt-2" data-dismiss="modal">
+						Project 1
+					</button>
+      				<button type="button" class="btn btn-outline-primary col-8 mt-2" data-dismiss="modal">
+      					Project 2
+      				</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modalCompiler" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+			<div class="modal-content text-center">
+				<div class="modal-header">
+					<h5 class="modal-title mr-3"><i class="fas fa-terminal"></i></h5>
+					<h5 class="modal-title font-weight-bold">Compiler</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body text-left">
+					<div class="form-group">
+						<!-- <textarea class="form-control text-white bg-dark" spellcheck="false"></textarea> -->
+						<div id="editor"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">
+      					Cancel
+      				</button>
+					<button type="button" class="btn btn-success" data-dismiss="modal">
+      					Compile
+      				</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="https://apis.google.com/js/api.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="ace-builds-master/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+	<script type="text/javascript" src="javascripts/MainScript.js"></script>
+	<script type="text/javascript" src="javascripts/TransitionsScript.js"></script>
+	<script type="text/javascript" src="javascripts/StatesScript.js"></script>
+	<script type="text/javascript" src="javascripts/InfoTransitionScript.js"></script>
+	<script type="text/javascript" src="javascripts/MainFunctionsScript.js"></script>
+	<script type="text/javascript" src="javascripts/ExternalComunicationScript.js"></script>
+	<script type="text/javascript" src="javascripts/SimulationScript.js"></script>
+	<script type="text/javascript" src="javascripts/ControlProjectsScript.js"></script>
+	<script type="text/javascript" src="javascripts/LotusScript.js"></script>
+	<script type="text/javascript" src="javascripts/ProbabilisticReachability.js"></script>
+	<script type="text/javascript" src="javascripts/Compiler.js"></script>
+
+	<!-- <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=loadPicker"></script> -->
+
+	<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<script src="https://ajaxorg.github.io/ace-builds/src/ace.js"></script> 
+
+</body>
+</html>

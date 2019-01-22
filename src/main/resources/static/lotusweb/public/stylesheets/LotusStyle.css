@@ -1,0 +1,129 @@
+p, h1, h2, h3, h4, h5, text, label, i{
+	user-select: none;
+}
+
+#HiddenElements{
+	width: 0px;
+	height: 0px;
+}
+
+#NavBarFunctions{
+	display: block;
+	background-image: linear-gradient(to bottom right, #7F00FF, #BA55D3);
+}
+
+#NavBarFunctions input{
+	border: none;
+	background-color:
+	transparent;
+	outline: none;
+}
+
+#DefaultFunctions{
+	border-bottom: 1px dotted #777;
+}
+
+#DefaultFunctions i{
+	font-size: 25px;
+	margin: 0px;
+	padding: 0px;
+}
+
+#DefaultFunctions a{
+	margin: 0px;
+	padding: 0px;
+	color: black;
+}
+
+#WorkStation{
+	border: 1px dotted #777;
+	border-top: none;
+	height: 520px;
+	overflow: hidden;
+	padding: 0px;
+	background-image: linear-gradient(black .001em, transparent .1em), linear-gradient(90deg, black .001em, transparent .1em);
+	background-size: 3em 3em;
+}
+
+#RealWorkStation{
+	width: 2000px;
+	height: 2000px;
+	border: none;
+	margin-left: -544.67px;
+	margin-top: -740px;
+	background-color: white;
+}
+
+#DefaultFunctions a:hover{
+	color: #aaa;
+}
+
+#Simulation {
+	display: block;
+	overflow-y: auto;
+	height: 460px;
+	width: 100%;
+}
+
+#editor {
+	height: 400px;
+	border-radius: 5px;
+}
+
+.copy_el{
+	cursor: move;
+}
+
+.text_circle{
+	pointer-events: none;
+}
+
+.img-fluid{
+	border-radius: 10px;
+}
+
+svg text{
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.text_editable_input input{
+	font-size: 10px;
+	border: none;
+	background-color: transparent;
+	text-align: center;
+}
+
+@keyframes strokeMovimentSimulation{
+	from{
+		stroke-dashoffset: 100
+	}
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+  cursor: default; 
+}
