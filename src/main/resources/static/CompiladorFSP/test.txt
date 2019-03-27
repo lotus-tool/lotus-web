@@ -1,0 +1,12 @@
+CLOCK ( M = 1, B=2 ) = ( when a<3 <0.3> action -> Process | action1 -> Process2  ).
+
+CLOCK ( M =1, B=6 ) = ( action1 -> ( action2 -> Process2 ) ).
+
+CLOCK ( M =1, B=6 ) = ( action1 -> ( action2 -> (action3 -> Process2) ) ).
+
+EMPTY  = (in[x:0..2] -> FULL[x]).
+
+falta o FULL[x]
+
+EMPTY  = (in[x:0..2] -> FULL[x]),
+FULL[x:0..2] = (out[x] -> EMPTY).

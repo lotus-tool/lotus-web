@@ -1,0 +1,5 @@
+MAKE_A = (makeA->ready->used->MAKE_A).
+MAKE_A = (makeB->ready->used->MAKE_B).
+ASSEMBLE = (ready->assembly->used->ASSEMBLE).
+
+||FACTORY = (MAKE_A || MAKE_B || ASSEMBLE).

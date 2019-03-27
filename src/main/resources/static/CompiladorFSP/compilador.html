@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Compilador</title>
+	<meta charset="utf-8">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<style type="text/css">
+		
+		#resultado{
+			position: absolute;
+			top: 10px;
+			left: 10px;
+			width: 500px;
+			height: 500px;
+			background-color: black;
+			color: white;
+			padding: 10px 20px 10px 20px;
+		}
+
+		#editor{
+			position: absolute;
+			top: 10px;
+			left: 560px;
+			width: 500px;
+			height: 500px;
+			background-color: #666;
+			color: white;
+			padding: 10px 20px 10px 20px;
+		}
+
+		#compilar{
+			position: absolute;
+			top: 250px;
+			left: 1110px;
+		}
+
+	</style>
+
+</head>
+<body>
+
+	<div id="resultado" contenteditable="true"></div>
+	<div id="editor" contenteditable="true"></div>
+	<button id="compilar" onclick="Compilar(event)">Compilar</button>
+
+	<script type="text/javascript" src="compilador.js"></script>
+
+</body>
+</html>
